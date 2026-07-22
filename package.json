@@ -1,5 +1,5 @@
 {
-  "name": "frontend-webpack-template",
+  "name": "battleship",
   "version": "1.0.0",
   "private": true,
   "description": "",
@@ -16,16 +16,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soikat27/frontend-webpack-template.git"
+    "url": "git+https://github.com/soikat27/battleship.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/soikat27/frontend-webpack-template/issues"
+    "url": "https://github.com/soikat27/battleship/issues"
   },
-  "homepage": "https://github.com/soikat27/frontend-webpack-template#readme",
+  "homepage": "https://github.com/soikat27/battleship#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.29.7",
     "@eslint/js": "^10.0.1",
