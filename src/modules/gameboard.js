@@ -94,26 +94,31 @@ export default function Gameboard() {
     }
 
     function receiveAttack(cell) {
-        if (sunkShips >= shipsPlaced)
-            throw new Error("All ships have been sunk!");
+        if (isCellValid(cell) === false)
+            throw new Error("Invalid cell!");
+
         const row = cell[0];
         const col = cell[1];
-
-        if (grid[row][col] === undefined) {
-            grid[row][col] = "miss";
-            return;
-        }
         if (attackedCells.has(`${row}, ${col}`))
             throw Error ("Already hit! Choose another cell!");
 
-        const ship = grid[row][col];
-        ship.hit();
+        if (grid[row][col] === undefined)
+            grid[row][col] = "miss";
+        else {
+            const ship = grid[row][col];
+            ship.hit();
 
-        if (ship._isSunk === true)
-            sunkShips++; 
+            if (ship._isSunk === true)
+            sunkShips++;
+        }
+        attackedCells.add(`${row}, ${col}`);
+
+        // TODO: check if all ships are sunk – maybe show gameover message
+        if (sunkShips >= shipsPlaced.size)
+            return;
     }
 
     initializeBoard();
 
-    return {placeShip, getCellItem, receiveAttack, grid};
+    return {placeShip, getCellItem, receiveAttack};
 }
