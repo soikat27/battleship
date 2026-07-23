@@ -1,7 +1,41 @@
 // Import test helpers so ESLint recognizes them
 import {test, expect} from "@jest/globals";
 import Gameboard from "../modules/gameboard.js";
+import Ship from "../modules/ship.js";
 
-test("", () => {
-
+test("invalid ship placement test: cells", () => {
+    const testBoard = Gameboard();
+    expect(() => {testBoard.placeShip([2, 13], "V", 3);}).toThrow(new Error("The ship can't be placed!"));
 });
+test("invalid ship placement test: ship", () => {
+    const testBoard = Gameboard();
+    expect(() => {testBoard.placeShip([2, 2], "V", 5);}).toThrow(new Error("No such ship!"));
+});
+test("invalid ship placement test: overlap", () => {
+    const testBoard = Gameboard();
+    testBoard.placeShip([1, 2], "V", 3);
+    expect(() => {testBoard.placeShip([3, 1], "H", 2);}).toThrow(new Error("The ship can't be placed!"));
+});
+
+test("ship placement test-H: valid", () => {
+    const testBoard = Gameboard();
+    testBoard.placeShip([1, 2], "H", 0);
+
+    expect(testBoard.getCellItem([1, 2])).toEqual(new Ship(5));
+    expect(testBoard.getCellItem([1, 3])).toEqual(new Ship(5));
+    expect(testBoard.getCellItem([1, 4])).toEqual(new Ship(5));
+    expect(testBoard.getCellItem([1, 5])).toEqual(new Ship(5));
+    expect(testBoard.getCellItem([1, 6])).toEqual(new Ship(5));
+    expect(testBoard.getCellItem([1, 7])).toBeUndefined();
+});
+test("ship placement test-V: valid", () => {
+    const testBoard = Gameboard();
+    testBoard.placeShip([6, 7], "V", 4);
+
+    expect(testBoard.getCellItem([6, 7])).toEqual(new Ship(2));
+    expect(testBoard.getCellItem([7, 7])).toEqual(new Ship(2));
+    expect(testBoard.getCellItem([8, 7])).toBeUndefined();
+});
+
+
+
