@@ -14,11 +14,6 @@ export default function Gameboard() {
         for (let i = 0; i < grid.length; i++) {
             grid[i] = new Array(10);
         }
-
-        // build ships
-        // for (let i = 0; i < ships.length; i++) {
-        //     ships[i] = new Ship(SHIP_INFO[i][0]);
-        // }
     }
 
     function placeShip(startCell, orientation, shipIndex) {
