@@ -16,6 +16,15 @@ test("invalid ship placement test: overlap", () => {
     testBoard.placeShip([1, 2], "V", 3);
     expect(() => {testBoard.placeShip([3, 1], "H", 2);}).toThrow(new Error("The ship can't be placed!"));
 });
+test("invalid ship placement test: no available ship", () => {
+    const testBoard = Gameboard();
+    testBoard.placeShip([0, 0], "H", 0);
+    testBoard.placeShip([1, 0], "H", 1);
+    testBoard.placeShip([2, 0], "H", 1);
+    testBoard.placeShip([3, 0], "H", 1);
+    testBoard.placeShip([4, 0], "H", 1);
+    expect(() => {testBoard.placeShip([3, 1], "H", 2);}).toThrow(new Error("All ships have been placed!"));
+});
 
 test("ship placement test-H: valid", () => {
     const testBoard = Gameboard();

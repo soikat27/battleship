@@ -4,6 +4,7 @@ export default function Gameboard() {
     const SHIP_INFO = [[5, "carrier"], [4, "battleship"], [3, "cruiser"], [3, "submarine"], [2, "destroyer"]];
     const grid = new Array(10);
     const ships = new Array(5);
+    let shipsPlaced = 0;
 
     function initializeBoard() {
         // setup grid
@@ -18,6 +19,8 @@ export default function Gameboard() {
     }
 
     function placeShip(startCell, orientation, shipIndex) {
+        if (shipsPlaced >= ships.length)
+            throw new Error("All ships have been placed!");
         if (shipIndex < 0 || shipIndex >= ships.length)
             throw new Error("No such ship!");
         
@@ -30,6 +33,8 @@ export default function Gameboard() {
             const col = cell[1];
             grid[row][col] = ships[shipIndex];
         });
+
+        shipsPlaced++;
     }
 
     function getCellsForPlacement(startCell, orientation, shipIndex) {
@@ -83,5 +88,5 @@ export default function Gameboard() {
 
     initializeBoard();
 
-    return {placeShip, getCellItem, grid};
+    return {placeShip, getCellItem};
 }
