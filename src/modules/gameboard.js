@@ -113,7 +113,11 @@ export default function Gameboard() {
             return;
     }
 
+    function areShipsPlaced() {
+        return !(shipsPlaced.size < SHIP_INFO.length);
+    }
+
     initializeBoard();
 
-    return {placeShip, getCellItem, receiveAttack};
+    return {placeShip, getCellItem, receiveAttack, areShipsPlaced};
 }

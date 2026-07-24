@@ -1,0 +1,432 @@
+/* Name page — parchment chart, form, decorations */
+
+.name-page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-md);
+  padding-bottom: 4.5rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Paper wash + chart grid + age stains */
+.name-page_chart {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--parchment);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 15% 20%, var(--stain), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 85% 75%, var(--stain), transparent 50%),
+    radial-gradient(circle at 70% 15%, rgba(61, 92, 84, 0.08), transparent 40%),
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      transparent 42%,
+      rgba(42, 51, 36, 0.04) 42.5%,
+      transparent 43%
+    ),
+    linear-gradient(
+      160deg,
+      transparent 0%,
+      transparent 58%,
+      rgba(42, 51, 36, 0.05) 58.5%,
+      transparent 59%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 47px,
+      rgba(42, 51, 36, 0.06) 48px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 47px,
+      rgba(42, 51, 36, 0.06) 48px
+    ),
+    linear-gradient(
+      165deg,
+      var(--parchment) 0%,
+      #dcc9a0 45%,
+      var(--parchment-deep) 100%
+    );
+}
+
+.name-page_chart::before {
+  content: "";
+  position: absolute;
+  inset: 1.25rem;
+  border: 1px solid rgba(42, 51, 36, 0.22);
+  box-shadow: inset 0 0 0 6px rgba(228, 213, 181, 0.35);
+  pointer-events: none;
+}
+
+.name-page_chart::after {
+  content: "";
+  position: absolute;
+  width: min(9rem, 28vw);
+  height: min(9rem, 28vw);
+  top: 8%;
+  right: 7%;
+  border: 1px solid rgba(154, 123, 60, 0.45);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 1px rgba(154, 123, 60, 0.25),
+    0 0 0 12px rgba(154, 123, 60, 0.08);
+  background:
+    linear-gradient(var(--brass), var(--brass)) center / 1px 40% no-repeat,
+    linear-gradient(90deg, var(--brass), var(--brass)) center / 40% 1px no-repeat;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* Battle markings */
+.name-page_marks {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  color: var(--olive);
+}
+
+.name-page_marks-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.name-page_arc {
+  color: var(--brass);
+  opacity: 0.7;
+}
+
+.name-page_arc-a {
+  animation: arc-drift 6s ease-in-out infinite alternate;
+}
+
+.name-page_hit {
+  color: var(--ink);
+  opacity: 0.85;
+}
+
+.name-page_miss {
+  color: var(--sea);
+  opacity: 0.75;
+}
+
+.name-page_coords {
+  color: var(--olive);
+  opacity: 0.55;
+  letter-spacing: 0.06em;
+}
+
+/* Warships */
+.name-page_ship {
+  position: absolute;
+  z-index: 0;
+  color: var(--ink);
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.name-page_ship-wake {
+  opacity: 0.45;
+}
+
+.name-page_ship-blast {
+  color: var(--brass);
+  opacity: 0.9;
+  animation: blast-pulse 2.4s ease-in-out infinite;
+}
+
+.name-page_ship-nw {
+  top: 3%;
+  left: 1%;
+  width: min(24rem, 50vw);
+  transform: rotate(-7deg);
+  opacity: 0.34;
+}
+
+.name-page_ship-se {
+  right: 0;
+  bottom: 11%;
+  width: min(26rem, 54vw);
+  transform: rotate(6deg) scaleX(-1);
+  opacity: 0.3;
+}
+
+.name-page_ship-sw {
+  left: 1%;
+  bottom: 9%;
+  width: min(16rem, 38vw);
+  transform: rotate(5deg);
+  color: var(--olive);
+  opacity: 0.28;
+}
+
+/* Center content */
+.name-page_content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 28rem);
+  text-align: center;
+  animation: name-page-rise 0.9s ease-out both;
+}
+
+.name-page_title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 2px 2px 0 rgba(154, 123, 60, 0.25);
+}
+
+.name-page_tagline {
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.name-page_form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 18rem;
+  gap: var(--space-xs);
+}
+
+.name-page_label {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.name-page_input {
+  width: 100%;
+  padding: 0.35rem 0.15rem 0.5rem;
+  border: none;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.name-page_input::placeholder {
+  color: rgba(42, 51, 36, 0.55);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.name-page_input:hover {
+  border-bottom-color: var(--brass);
+}
+
+.name-page_input:focus {
+  border-bottom-color: var(--brass-bright);
+  box-shadow: 0 1px 0 0 var(--brass-bright);
+}
+
+.name-page_combat {
+  margin-top: var(--space-md);
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--ink);
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.name-page_combat:hover {
+  background-color: var(--brass);
+  border-color: var(--brass-bright);
+  color: var(--parchment);
+}
+
+.name-page_combat:focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 3px;
+}
+
+.name-page_combat:active {
+  transform: translateY(1px);
+}
+
+/* Footer */
+.name-page_footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  text-align: center;
+}
+
+.name-page_copyright {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.name-page_footer-sep {
+  margin: 0 0.4em;
+}
+
+.name-page_github {
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color 0.2s ease;
+}
+
+.name-page_github:hover {
+  color: var(--brass);
+}
+
+.name-page_github:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+@keyframes name-page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blast-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  45% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.75;
+  }
+}
+
+@keyframes arc-drift {
+  from {
+    stroke-dashoffset: 0;
+    opacity: 0.55;
+  }
+  to {
+    stroke-dashoffset: 28;
+    opacity: 0.85;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name-page_content {
+    animation: none;
+  }
+
+  .name-page_ship-blast,
+  .name-page_arc-a {
+    animation: none;
+  }
+
+  .name-page_combat,
+  .name-page_input,
+  .name-page_github {
+    transition: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .name-page {
+    padding: var(--space-sm);
+    padding-bottom: 4.75rem;
+  }
+
+  .name-page_chart::before {
+    inset: 0.65rem;
+  }
+
+  .name-page_chart::after {
+    top: 5%;
+    right: 4%;
+    opacity: 0.4;
+  }
+
+  .name-page_marks {
+    opacity: 0.28;
+  }
+
+  .name-page_coords {
+    display: none;
+  }
+
+  .name-page_ship-nw {
+    top: 2%;
+    left: -2%;
+    width: min(15rem, 62vw);
+    opacity: 0.22;
+  }
+
+  .name-page_ship-se {
+    right: -2%;
+    bottom: 13%;
+    width: min(16rem, 66vw);
+    opacity: 0.2;
+  }
+
+  .name-page_ship-sw {
+    display: none;
+  }
+
+  .name-page_tagline {
+    margin-bottom: var(--space-md);
+    font-size: 0.85rem;
+  }
+
+  .name-page_combat {
+    font-size: 0.95rem;
+  }
+
+  .name-page_copyright {
+    font-size: 0.62rem;
+    line-height: 1.6;
+  }
+}

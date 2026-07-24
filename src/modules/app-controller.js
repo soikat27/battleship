@@ -19,8 +19,14 @@ function AppController() {
         players[1] = player2;
     }
 
-    function makeMove() {
-        return;
+    function makeMove(cell) {
+        // 1. throw error if all ships haven't been placed
+        const currPlayerBoard = players[currentMove].gameboard;
+        if (!currPlayerBoard.areShipsPlaced())
+            throw new Error("Please place all of your ships to proceed!");
+
+        const enemy = (currentMove === 0) ? 1 : 0;
+        const enemyBoard = 
     }
 
     return {setupGame, makeMove};
