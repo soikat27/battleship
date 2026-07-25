@@ -26,8 +26,10 @@ function AppController() {
             throw new Error("Please place all of your ships to proceed!");
 
         const enemy = (currentMove === 0) ? 1 : 0;
-        const enemyBoard = 
+        // const enemyBoard = 
     }
 
     return {setupGame, makeMove};
 }
+
+export default AppController;
