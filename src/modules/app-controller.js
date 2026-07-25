@@ -1,11 +1,11 @@
 import Gameboard from "./gameboard.js";
 import Player from "./player.js";
 
-function AppController() {
+const AppController = (() => {
     const players = new Array(2);
     const currentMove = 0;
 
-    function setupGame(p1Name, p2Name=undefined) {
+    function setupPlayers(p1Name, p2Name=undefined) {
         // player-1
         const player1Board = Gameboard();
         const player1 = new Player("Human", player1Board, p1Name);
@@ -29,7 +29,7 @@ function AppController() {
         // const enemyBoard = 
     }
 
-    return {setupGame, makeMove};
-}
+    return {setupPlayers, makeMove};
+})();
 
 export default AppController;

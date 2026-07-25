@@ -12,6 +12,11 @@
   padding-bottom: 4.5rem;
 }
 
+/* Author `display: flex` beats the UA `[hidden]` rule — force hide */
+.name-page[hidden] {
+  display: none;
+}
+
 .name-page_content {
   position: relative;
   z-index: 1;

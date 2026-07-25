@@ -4,13 +4,29 @@ function UIController() {
 
     function goToShipPage(event) {
         // 1. prevent default behavior + validate and report inputs
+        event.preventDefault();
+        const playerNameInput = document.getElementById("player-name");
+        validatePlayerName(playerNameInput);
 
-        // 2. 
+        const namePageForm = event.target;
+        if (!namePageForm.checkValidity()) {
+            namePageForm.reportValidity();
+            return;
+        }
+
+        // 2. setup game in AppController module
+        let p1Name = playerNameInput.value.trim();
+        p1Name = p1Name.slice(0, 1).toUpperCase() + p1Name.slice(1);
+        AppController.setupPlayers(p1Name);
+
+        // 3. show ShipPage (toggle "hidden" class)
+        document.querySelector("section.name-page").hidden = true;
+        document.querySelector("section.battle-page").hidden = true;
+        document.querySelector("section.ship-page").hidden = false;
     }
 
-    function validatePlayerName(event) {
+    function validatePlayerName(input) {
         // 1. clear custom validity
-        const input = event.target;
         console.log(input.value);
         input.setCustomValidity("");
 
@@ -33,7 +49,10 @@ function UIController() {
 
         // player name input validation
         const playerNameInput = document.getElementById("player-name");
-        playerNameInput.addEventListener("input", validatePlayerName);
+        playerNameInput.addEventListener("input", () => {
+            const playerNameInput = document.getElementById("player-name");
+            validatePlayerName(playerNameInput);
+        });
     }
 
     function initializeApp() {
