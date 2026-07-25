@@ -113,10 +113,184 @@
         </section>
 
         <!-- ship page (shown later via UIController JS module) -->
-        <section class="ship-page"hidden>
+        <section class="ship-page" hidden>
             <div class="ship-page_content">
-                <h1 class="ship-page_title">Place Your Fleet</h1>
-                <p class="ship-page_tagline">Deploy your ships on the chart, Captain.</p>
+                <h1 class="ship-page_title">Place Your Fleet, Captain</h1>
+                <p class="ship-page_message">Select Horizontal or Vertical, then drag a ship from the fleet onto the chart. Drop on the cell where the ship should start.</p>
+
+                <div class="ship-page_orient">
+                    <button type="button" class="ship-page_orient-btn is-active" data-orientation="H">Horizontal</button>
+                    <button type="button" class="ship-page_orient-btn" data-orientation="V">Vertical</button>
+                </div>
+
+                <div class="ship-page_board-wrap">
+                    <div class="ship-page_grid">
+                        <div class="ship-page_grid-corner"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">A</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">B</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">C</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">D</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">E</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">F</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">G</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">H</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">I</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-col">J</div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">1</div>
+                        <div class="ship-page_cell" data-row="0" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="0" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">2</div>
+                        <div class="ship-page_cell" data-row="1" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="1" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">3</div>
+                        <div class="ship-page_cell" data-row="2" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="2" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">4</div>
+                        <div class="ship-page_cell" data-row="3" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="3" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">5</div>
+                        <div class="ship-page_cell" data-row="4" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="4" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">6</div>
+                        <div class="ship-page_cell" data-row="5" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="5" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">7</div>
+                        <div class="ship-page_cell" data-row="6" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="6" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">8</div>
+                        <div class="ship-page_cell" data-row="7" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="7" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">9</div>
+                        <div class="ship-page_cell" data-row="8" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="8" data-col="9"></div>
+                        <div class="ship-page_grid-label ship-page_grid-label-row">10</div>
+                        <div class="ship-page_cell" data-row="9" data-col="0"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="1"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="2"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="3"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="4"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="5"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="6"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="7"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="8"></div>
+                        <div class="ship-page_cell" data-row="9" data-col="9"></div>
+                    </div>
+
+                    <ul class="ship-page_fleet">
+                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="0" data-ship-length="5">
+                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
+                            </svg>
+                            <span class="ship-page_fleet-len">5</span>
+                            <span class="ship-page_fleet-name">Carrier</span>
+                        </li>
+                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="1" data-ship-length="4">
+                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
+                            </svg>
+                            <span class="ship-page_fleet-len">4</span>
+                            <span class="ship-page_fleet-name">Battleship</span>
+                        </li>
+                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="2" data-ship-length="3">
+                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
+                            </svg>
+                            <span class="ship-page_fleet-len">3</span>
+                            <span class="ship-page_fleet-name">Cruiser</span>
+                        </li>
+                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="3" data-ship-length="3">
+                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
+                            </svg>
+                            <span class="ship-page_fleet-len">3</span>
+                            <span class="ship-page_fleet-name">Submarine</span>
+                        </li>
+                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="4" data-ship-length="2">
+                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
+                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
+                            </svg>
+                            <span class="ship-page_fleet-len">2</span>
+                            <span class="ship-page_fleet-name">Destroyer</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="ship-page_actions">
+                    <button type="button" class="ship-page_reset">Reset</button>
+                    <button type="button" class="ship-page_confirm">Start Battle</button>
+                </div>
             </div>
         </section>
 
