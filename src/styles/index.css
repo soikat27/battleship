@@ -1,4 +1,7 @@
-/* Bundle entry — add modular css here */
+/* Bundle entry — page CSS modules */
 
 @import "./base.css";
+@import "./app-bg.css";
 @import "./name-page.css";
+@import "./ship-page.css";
+@import "./battle-page.css";

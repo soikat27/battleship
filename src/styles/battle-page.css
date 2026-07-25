@@ -1,0 +1,37 @@
+/* Battle page — combat UI (background is .app-bg) */
+
+.battle-page {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-md);
+}
+
+.battle-page[hidden] {
+  display: none;
+}
+
+.battle-page_content {
+  text-align: center;
+  max-width: 28rem;
+}
+
+.battle-page_title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.battle-page_tagline {
+  margin-top: var(--space-sm);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}

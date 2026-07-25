@@ -3,7 +3,9 @@ import AppController from "./app-controller.js";
 function UIController() {
 
     function goToShipPage(event) {
-        
+        // 1. prevent default behavior + validate and report inputs
+
+        // 2. 
     }
 
     function validatePlayerName(event) {
