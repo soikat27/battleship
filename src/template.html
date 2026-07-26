@@ -112,8 +112,10 @@
             </footer>
         </section>
 
-        <!-- ship page (shown later via UIController JS module) -->
+        <!-- ship page -->
         <section class="ship-page" hidden>
+            <p class="ship-page_toast" hidden></p>
+
             <div class="ship-page_content">
                 <h1 class="ship-page_title">Place Your Fleet, Captain</h1>
                 <p class="ship-page_message">Select Horizontal or Vertical, then drag a ship from the fleet onto the chart. Drop on the cell where the ship should start.</p>
@@ -124,49 +126,15 @@
                 </div>
 
                 <div class="ship-page_board-wrap">
-                    <!-- sea grid -->
-                    <div class="ship-page_grid">
-                    </div>
+                    <!-- grid -->
+                    <div class="ship-page_grid"></div>
 
                     <!-- fleet -->
-                    <ul class="ship-page_fleet">
-                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="0" data-ship-length="5">
-                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
-                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
-                            </svg>
-                            <span class="ship-page_fleet-len">5</span>
-                            <span class="ship-page_fleet-name">Carrier</span>
-                        </li>
-                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="1" data-ship-length="4">
-                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
-                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
-                            </svg>
-                            <span class="ship-page_fleet-len">4</span>
-                            <span class="ship-page_fleet-name">Battleship</span>
-                        </li>
-                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="2" data-ship-length="3">
-                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
-                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
-                            </svg>
-                            <span class="ship-page_fleet-len">3</span>
-                            <span class="ship-page_fleet-name">Cruiser</span>
-                        </li>
-                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="3" data-ship-length="3">
-                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
-                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
-                            </svg>
-                            <span class="ship-page_fleet-len">3</span>
-                            <span class="ship-page_fleet-name">Submarine</span>
-                        </li>
-                        <li class="ship-page_fleet-item" draggable="true" data-ship-index="4" data-ship-length="2">
-                            <svg class="ship-page_fleet-icon" viewBox="0 0 48 20" aria-hidden="true" focusable="false">
-                                <path fill="currentColor" d="M2 12h40l-2 5H4zm6-2 3-6h4l2 6zm10 0 4-8h8l3 8zm14 0 2-4h5l2 4z"/>
-                            </svg>
-                            <span class="ship-page_fleet-len">2</span>
-                            <span class="ship-page_fleet-name">Destroyer</span>
-                        </li>
-                    </ul>
+                    <ul class="ship-page_fleet"></ul>
                 </div>
+
+                <!-- ship ghost Image for during dragNdrop-->
+                <div class="ship-ghost"></div>
 
                 <div class="ship-page_actions">
                     <button type="button" class="ship-page_reset">Reset</button>

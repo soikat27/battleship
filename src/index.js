@@ -4,4 +4,3 @@ import UIController from "./modules/ui-controller.js";
 
 const testApp = UIController();
 testApp.initializeApp();
-

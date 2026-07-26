@@ -20,6 +20,31 @@
   display: none;
 }
 
+.ship-page_toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 20;
+  max-width: min(22rem, calc(100vw - 2rem));
+  margin: 0;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--brass);
+  background: rgba(228, 213, 181, 0.96);
+  box-shadow: 0 4px 16px rgba(42, 51, 36, 0.18);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease;
+}
+
+.ship-page_toast[hidden] {
+  display: none;
+}
+
 .ship-page_content {
   width: min(100%, 52rem);
   display: flex;
@@ -136,8 +161,10 @@
   flex-direction: column;
   align-items: center;
   gap: 0.65rem;
-  padding: 0;
+  padding: 0.75rem;
   margin: 0;
+  border: 1px solid rgba(42, 51, 36, 0.3);
+  background: rgba(90, 70, 40, 0.14);
 }
 
 .ship-page_fleet-item {
@@ -191,16 +218,57 @@
   cursor: grabbing;
 }
 
-.ship-page_fleet-item.is-placed {
-  opacity: 0.35;
-  cursor: default;
+.ship-page_fleet-item.is-placed,
+.ship-page_fleet-item[hidden] {
+  /* keep tile visible — default [hidden] would remove it */
+  display: flex;
+  opacity: 1;
+  border-style: solid;
+  border-color: rgba(42, 51, 36, 0.25);
+  background: rgba(42, 51, 36, 0.28);
   box-shadow: none;
+  color: rgba(42, 51, 36, 0.45);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ship-page_fleet-item.is-placed .ship-page_fleet-icon,
+.ship-page_fleet-item[hidden] .ship-page_fleet-icon,
+.ship-page_fleet-item.is-placed .ship-page_fleet-name,
+.ship-page_fleet-item[hidden] .ship-page_fleet-name,
+.ship-page_fleet-item.is-placed .ship-page_fleet-len,
+.ship-page_fleet-item[hidden] .ship-page_fleet-len {
+  color: rgba(42, 51, 36, 0.4);
 }
 
 .ship-page_actions {
   display: flex;
   gap: 0.75rem;
   margin-top: var(--space-sm);
+}
+
+/* Drag ghost — N cells matching .ship-page_grid cell size + gap */
+.ship-ghost {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  pointer-events: none;
+  opacity: 0.8;
+
+  position: fixed;
+  left: -9999px;
+}
+
+.ship-ghost.is-vertical {
+  flex-direction: column;
+}
+
+.ship-ghost_cell {
+  box-sizing: border-box;
+  width: var(--ship-cell);
+  height: var(--ship-cell);
+  border: 1px solid var(--brass);
+  background: rgba(42, 51, 36, 0.72);
 }
 
 .ship-page_reset,

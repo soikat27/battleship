@@ -17,6 +17,10 @@ export default function Gameboard(size=10) {
         return [...SHIP_INFO];
     }
 
+    function isThisShipPlaced(shipIndex) {
+        return shipsPlaced.has(shipIndex);
+    }
+
     function initializeBoard() {
         // setup grid
         for (let i = 0; i < grid.length; i++) {
@@ -33,9 +37,9 @@ export default function Gameboard(size=10) {
         if (shipsPlaced.has(shipIndex))
             throw new Error("This ship has already been placed!");
         
-        const cells = getCellsForPlacement(startCell, currentOrientation, shipIndex);
+        const cells = getCellsForPlacement(startCell, shipIndex);
         if (cells === false)
-            throw new Error("The ship can't be placed!");
+            throw new Error("The ship can't be placed at this location! Please select a valid location.");
 
         // 2. place ship
         const ship = new Ship(SHIP_INFO[shipIndex][0]);
@@ -57,7 +61,7 @@ export default function Gameboard(size=10) {
         const cells = [];
 
         if (currentOrientation === "H") {
-            const endCol = startCol+shipLength;
+            const endCol = startCol+shipLength-1;
             if (isCellValid([startRow, endCol]) === false)
                 return false;
 
@@ -68,7 +72,7 @@ export default function Gameboard(size=10) {
             }
         }
         else if (currentOrientation === "V") {
-            const endRow = startRow+shipLength;
+            const endRow = startRow+shipLength-1;
             if (isCellValid([endRow, startCol]) === false)
                 return false;
 
@@ -138,5 +142,5 @@ export default function Gameboard(size=10) {
 
     initializeBoard();
 
-    return {placeShip, getCellItem, receiveAttack, areShipsPlaced, getBoardSize, getShipInfo, getCurrentOrientation, setOrientation};
+    return {placeShip, getCellItem, receiveAttack, areShipsPlaced, getBoardSize, getShipInfo, getCurrentOrientation, setOrientation, getCellsForPlacement, isThisShipPlaced};
 }

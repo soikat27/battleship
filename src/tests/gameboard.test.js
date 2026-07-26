@@ -6,30 +6,35 @@ import Ship from "../modules/ship.js";
 describe("place ship test", () => {
     test("invalid ship placement test: invalid cells", () => {
         const testBoard = Gameboard();
-        expect(() => {testBoard.placeShip([2, 13], "V", 3);}).toThrow(new Error("The ship can't be placed!"));
+        testBoard.setOrientation("V");
+        expect(() => {testBoard.placeShip([2, 13], 3);}).toThrow(new Error("The ship can't be placed at this location! Please select a valid location."));
     });
     test("invalid ship placement test: no such ship", () => {
         const testBoard = Gameboard();
-        expect(() => {testBoard.placeShip([2, 2], "V", 5);}).toThrow(new Error("No such ship!"));
+        testBoard.setOrientation("V");
+        expect(() => {testBoard.placeShip([2, 2], 5);}).toThrow(new Error("No such ship!"));
     });
     test("invalid ship placement test: overlap", () => {
         const testBoard = Gameboard();
-        testBoard.placeShip([1, 2], "V", 3);
-        expect(() => {testBoard.placeShip([3, 1], "H", 2);}).toThrow(new Error("The ship can't be placed!"));
+        testBoard.setOrientation("V");
+        testBoard.placeShip([1, 2], 3);
+        
+        testBoard.setOrientation("H");
+        expect(() => {testBoard.placeShip([3, 1], 2);}).toThrow(new Error("The ship can't be placed at this location! Please select a valid location."));
     });
     test("invalid ship placement test: no available ship", () => {
         const testBoard = Gameboard();
-        testBoard.placeShip([0, 0], "H", 0);
-        testBoard.placeShip([1, 0], "H", 1);
-        testBoard.placeShip([2, 0], "H", 2);
-        testBoard.placeShip([3, 0], "H", 3);
-        testBoard.placeShip([4, 0], "H", 4);
-        expect(() => {testBoard.placeShip([3, 1], "H", 2);}).toThrow(new Error("All ships have been placed!"));
+        testBoard.placeShip([0, 0], 0);
+        testBoard.placeShip([1, 0], 1);
+        testBoard.placeShip([2, 0], 2);
+        testBoard.placeShip([3, 0], 3);
+        testBoard.placeShip([4, 0], 4);
+        expect(() => {testBoard.placeShip([3, 1], 2);}).toThrow(new Error("All ships have been placed!"));
     });
 
     test("ship placement test-H: valid", () => {
         const testBoard = Gameboard();
-        testBoard.placeShip([1, 2], "H", 0);
+        testBoard.placeShip([1, 2], 0);
 
         expect(testBoard.getCellItem([1, 2])).toEqual(new Ship(5));
         expect(testBoard.getCellItem([1, 3])).toEqual(new Ship(5));
@@ -40,7 +45,8 @@ describe("place ship test", () => {
     });
     test("ship placement test-V: valid", () => {
         const testBoard = Gameboard();
-        testBoard.placeShip([6, 7], "V", 4);
+        testBoard.setOrientation("V");
+        testBoard.placeShip([6, 7], 4);
 
         expect(testBoard.getCellItem([6, 7])).toEqual(new Ship(2));
         expect(testBoard.getCellItem([7, 7])).toEqual(new Ship(2));
@@ -49,8 +55,8 @@ describe("place ship test", () => {
 
     test("invalid ship placement test: duplicate ship", () => {
         const testBoard = Gameboard();
-        testBoard.placeShip([0, 0], "H", 4);
-        expect(() => {testBoard.placeShip([1, 0], "H", 4);}).toThrow(new Error("This ship has already been placed!"));
+        testBoard.placeShip([0, 0], 4);
+        expect(() => {testBoard.placeShip([1, 0], 4);}).toThrow(new Error("This ship has already been placed!"));
     });
 });
 
@@ -74,7 +80,7 @@ describe("receive attack test", () => {
 
     test("successful attack", () => {
         const testBoard = Gameboard();
-        testBoard.placeShip([0, 0], "H", 0);
+        testBoard.placeShip([0, 0], 0);
         expect(testBoard.getCellItem([0, 0]).hitCount).toBe(0);
 
         testBoard.receiveAttack([0, 0]);
