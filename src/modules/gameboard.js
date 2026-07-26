@@ -7,6 +7,7 @@ export default function Gameboard(size=10) {
     const shipsPlaced = new Set();
     const attackedCells = new Set();
     let sunkShips = 0;
+    let currentOrientation = "H";
 
     function getBoardSize() {
         return GAMEBOARD_SIZE;
@@ -23,7 +24,7 @@ export default function Gameboard(size=10) {
         }
     }
 
-    function placeShip(startCell, orientation, shipIndex) {
+    function placeShip(startCell, shipIndex) {
         // 1. validate ship 
         if (shipsPlaced.size >= SHIP_INFO.length)
             throw new Error("All ships have been placed!");
@@ -32,7 +33,7 @@ export default function Gameboard(size=10) {
         if (shipsPlaced.has(shipIndex))
             throw new Error("This ship has already been placed!");
         
-        const cells = getCellsForPlacement(startCell, orientation, shipIndex);
+        const cells = getCellsForPlacement(startCell, currentOrientation, shipIndex);
         if (cells === false)
             throw new Error("The ship can't be placed!");
 
@@ -46,7 +47,7 @@ export default function Gameboard(size=10) {
         shipsPlaced.add(shipIndex);
     }
 
-    function getCellsForPlacement(startCell, orientation, shipIndex) {
+    function getCellsForPlacement(startCell, shipIndex) {
         if (isCellValid(startCell) === false)
             return false;
 
@@ -55,7 +56,7 @@ export default function Gameboard(size=10) {
         const shipLength = SHIP_INFO[shipIndex][0];
         const cells = [];
 
-        if (orientation === "H") {
+        if (currentOrientation === "H") {
             const endCol = startCol+shipLength;
             if (isCellValid([startRow, endCol]) === false)
                 return false;
@@ -66,7 +67,7 @@ export default function Gameboard(size=10) {
                 cells.push([startRow, i]);
             }
         }
-        else if (orientation === "V") {
+        else if (currentOrientation === "V") {
             const endRow = startRow+shipLength;
             if (isCellValid([endRow, startCol]) === false)
                 return false;
@@ -93,6 +94,17 @@ export default function Gameboard(size=10) {
 
     function getCellItem(cell) {
         return grid[cell[0]][cell[1]];
+    }
+
+    function getCurrentOrientation() {
+        return currentOrientation;
+    }
+
+    function setOrientation(orient) {
+        if (orient !== "H" && orient !== "V")
+            throw new Error("Invalid orientation");
+
+        currentOrientation = orient;
     }
 
     function receiveAttack(cell) {
@@ -126,5 +138,5 @@ export default function Gameboard(size=10) {
 
     initializeBoard();
 
-    return {placeShip, getCellItem, receiveAttack, areShipsPlaced, getBoardSize, getShipInfo};
+    return {placeShip, getCellItem, receiveAttack, areShipsPlaced, getBoardSize, getShipInfo, getCurrentOrientation, setOrientation};
 }

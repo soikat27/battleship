@@ -1,7 +1,6 @@
 import AppController from "./app-controller.js";
 
 function UIController() {
-
     function goToShipPage(event) {
         // 1. prevent default behavior + validate and report inputs
         event.preventDefault();
@@ -82,6 +81,32 @@ function UIController() {
         input.reportValidity();
     }
 
+    function setOrient(event) {
+        // 1. determine current target's closest is H or V button
+        if (!event.target.closest(".ship-page_orient-btn"))
+            return;
+        const orient = event.target.dataset.orientation;
+
+        // 2. call setOrient from myBoard
+        const myBoard = AppController.getMyBoard();
+        const currentOrient = myBoard.getCurrentOrientation();
+        if (orient === currentOrient)
+            return;
+
+        myBoard.setOrientation(orient);
+
+        // 3. update classList
+        const newOrient = myBoard.getCurrentOrientation();
+        if (newOrient === "H") {
+            document.querySelector('.ship-page_orient-btn[data-orientation="H"]').classList.add("is-active");
+            document.querySelector('.ship-page_orient-btn[data-orientation="V"]').classList.remove("is-active");
+        }    
+        else {
+            document.querySelector('.ship-page_orient-btn[data-orientation="V"]').classList.add("is-active");
+            document.querySelector('.ship-page_orient-btn[data-orientation="H"]').classList.remove("is-active");
+        }
+    }
+
     function setEventListeners() {
         // name-page form
         const namePageForm = document.querySelector(".name-page_form");
@@ -93,6 +118,10 @@ function UIController() {
             const playerNameInput = document.getElementById("player-name");
             validatePlayerName(playerNameInput);
         });
+
+        // orient button toggle
+        const orientBtnsDiv = document.querySelector(".ship-page_orient");
+        orientBtnsDiv.addEventListener("click", setOrient);
     }
 
     function initializeApp() {
