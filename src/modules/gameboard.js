@@ -1,13 +1,20 @@
 import Ship from "./ship.js";
 
-export default function Gameboard() {
+export default function Gameboard(size=10) {
+    const GAMEBOARD_SIZE = size;
     const SHIP_INFO = [[5, "carrier"], [4, "battleship"], [3, "cruiser"], [3, "submarine"], [2, "destroyer"]];
     const grid = new Array(10);
-    // const ships = new Array(5);
-    // let shipsPlaced = 0;
     const shipsPlaced = new Set();
     const attackedCells = new Set();
     let sunkShips = 0;
+
+    function getBoardSize() {
+        return GAMEBOARD_SIZE;
+    }
+
+    function getShipInfo() {
+        return [...SHIP_INFO];
+    }
 
     function initializeBoard() {
         // setup grid
@@ -119,5 +126,5 @@ export default function Gameboard() {
 
     initializeBoard();
 
-    return {placeShip, getCellItem, receiveAttack, areShipsPlaced};
+    return {placeShip, getCellItem, receiveAttack, areShipsPlaced, getBoardSize, getShipInfo};
 }

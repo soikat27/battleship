@@ -19,6 +19,13 @@ const AppController = (() => {
         players[1] = player2;
     }
 
+    function getMyBoard() {
+        if (!players[0])
+            throw new Error("Please setup players first!");
+            
+        return players[0].gameboard;
+    }
+
     function makeMove(cell) {
         // 1. throw error if all ships haven't been placed
         const currPlayerBoard = players[currentMove].gameboard;
@@ -29,7 +36,7 @@ const AppController = (() => {
         // const enemyBoard = 
     }
 
-    return {setupPlayers, makeMove};
+    return {setupPlayers, getMyBoard, makeMove};
 })();
 
 export default AppController;

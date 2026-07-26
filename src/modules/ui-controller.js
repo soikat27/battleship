@@ -19,10 +19,50 @@ function UIController() {
         p1Name = p1Name.slice(0, 1).toUpperCase() + p1Name.slice(1);
         AppController.setupPlayers(p1Name);
 
-        // 3. show ShipPage (toggle "hidden" class)
+        // 3. render grid + ship dragbox
+        renderGrid();
+
+        // 4. show ShipPage (toggle "hidden" class)
         document.querySelector("section.name-page").hidden = true;
         document.querySelector("section.battle-page").hidden = true;
         document.querySelector("section.ship-page").hidden = false;
+    }
+
+    function renderGrid() {
+        const gridContainer = document.querySelector(".ship-page_grid");
+
+        // 1. add a empty corner
+        const gridCorner = document.createElement("div");
+        gridCorner.classList.add("ship-page_grid-corner");
+        gridContainer.appendChild(gridCorner);
+
+        // 2. add col label
+        const gridSize = AppController.getMyBoard().getBoardSize();
+        const unicode_A = "A".charCodeAt(0);
+        for (let i = 0; i < gridSize; i++) {
+            const gridLabel = document.createElement("div");
+            gridLabel.classList.add("ship-page_grid-label", "ship-page_grid-label-col");
+            gridLabel.textContent = String.fromCharCode(unicode_A+i);
+
+            gridContainer.appendChild(gridLabel);
+        }
+
+        // 3. add row labels
+        //  3.a for each add grid cells
+        for (let rowLabel = 1; rowLabel <= gridSize; rowLabel++) {
+            const label = document.createElement("div");
+            label.classList.add("ship-page_grid-label", "ship-page_grid-label-row");
+            label.textContent = rowLabel;
+            gridContainer.appendChild(label);
+
+            for (let cellCol = 0; cellCol < gridSize; cellCol++) {
+                const cell = document.createElement("div");
+                cell.classList.add("ship-page_cell");
+                cell.dataset.row = rowLabel;
+                cell.dataset.col = cellCol;
+                gridContainer.appendChild(cell);
+            }
+        }
     }
 
     function validatePlayerName(input) {
