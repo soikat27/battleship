@@ -217,6 +217,14 @@ function UIController() {
         }
     }
 
+    function resetShipPlacement() {
+        // 1. call ship-reset from AppController module
+        AppController.getMyBoard().resetShipPlacement();
+
+        // 2. re-render ship page
+        renderShipPage();
+    }
+
     function setEventListeners() {
         // name-page form
         const namePageForm = document.querySelector(".name-page_form");
@@ -240,6 +248,10 @@ function UIController() {
         const shipGrid = document.querySelector(".ship-page_grid");
         shipGrid.addEventListener("dragover", shipDragoverListener);
         shipGrid.addEventListener("drop", shipDropListener);
+
+        // reset ship placements
+        const resetShip = document.querySelector(".ship-page_reset");
+        resetShip.addEventListener("click", resetShipPlacement);
     }
 
     function initializeApp() {

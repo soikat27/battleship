@@ -3,11 +3,21 @@ import Ship from "./ship.js";
 export default function Gameboard(size=10) {
     const GAMEBOARD_SIZE = size;
     const SHIP_INFO = [[5, "carrier"], [4, "battleship"], [3, "cruiser"], [3, "submarine"], [2, "destroyer"]];
-    const grid = new Array(10);
+
+    const grid = new Array(GAMEBOARD_SIZE);
     const shipsPlaced = new Set();
     const attackedCells = new Set();
+
     let sunkShips = 0;
     let currentOrientation = "H";
+
+    function initializeBoard() {
+        for (let i = 0; i < grid.length; i++) {
+            grid[i] = new Array(grid.length);
+            for (let j = 0; j < grid[i].length; j++)
+                grid[i][j] = undefined;
+        }    
+    }
 
     function getBoardSize() {
         return GAMEBOARD_SIZE;
@@ -17,15 +27,8 @@ export default function Gameboard(size=10) {
         return [...SHIP_INFO];
     }
 
-    function isThisShipPlaced(shipIndex) {
-        return shipsPlaced.has(shipIndex);
-    }
-
-    function initializeBoard() {
-        // setup grid
-        for (let i = 0; i < grid.length; i++) {
-            grid[i] = new Array(10);
-        }
+    function getCellItem(cell) {
+        return grid[cell[0]][cell[1]];
     }
 
     function placeShip(startCell, shipIndex) {
@@ -96,10 +99,6 @@ export default function Gameboard(size=10) {
         return true;
     }
 
-    function getCellItem(cell) {
-        return grid[cell[0]][cell[1]];
-    }
-
     function getCurrentOrientation() {
         return currentOrientation;
     }
@@ -109,6 +108,19 @@ export default function Gameboard(size=10) {
             throw new Error("Invalid orientation");
 
         currentOrientation = orient;
+    }
+
+    function isThisShipPlaced(shipIndex) {
+        return shipsPlaced.has(shipIndex);
+    }
+
+    function areShipsPlaced() {
+        return !(shipsPlaced.size < SHIP_INFO.length);
+    }
+
+    function resetShipPlacement() {
+        initializeBoard();
+        shipsPlaced.clear();
     }
 
     function receiveAttack(cell) {
@@ -136,11 +148,6 @@ export default function Gameboard(size=10) {
             return;
     }
 
-    function areShipsPlaced() {
-        return !(shipsPlaced.size < SHIP_INFO.length);
-    }
-
     initializeBoard();
-
-    return {placeShip, getCellItem, receiveAttack, areShipsPlaced, getBoardSize, getShipInfo, getCurrentOrientation, setOrientation, getCellsForPlacement, isThisShipPlaced};
+    return {getBoardSize, getShipInfo, getCellItem, placeShip, getCellsForPlacement, getCurrentOrientation, setOrientation, isThisShipPlaced, areShipsPlaced, resetShipPlacement, receiveAttack};
 }
