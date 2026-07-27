@@ -99,6 +99,10 @@ function UIController() {
     function renderShipPage() {
         renderGrid();
         renderFleet();
+
+        // enable start-battle button if all ships are placed
+        const battleBtn = document.querySelector(".ship-page_battle");
+        battleBtn.disabled = !(AppController.getMyBoard().areShipsPlaced());
     }
 
     function validatePlayerName(input) {

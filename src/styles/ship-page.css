@@ -220,7 +220,6 @@
 
 .ship-page_fleet-item.is-placed,
 .ship-page_fleet-item[hidden] {
-  /* keep tile visible — default [hidden] would remove it */
   display: flex;
   opacity: 1;
   border-style: solid;
@@ -272,7 +271,7 @@
 }
 
 .ship-page_reset,
-.ship-page_confirm {
+.ship-page_battle {
   padding: 0.55rem 1.1rem;
   border: 1px solid var(--ink);
   background: transparent;
@@ -286,7 +285,7 @@
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.ship-page_confirm {
+.ship-page_battle {
   background: var(--brass);
   color: var(--parchment);
 }
@@ -295,18 +294,23 @@
   background: rgba(42, 51, 36, 0.08);
 }
 
-.ship-page_confirm:hover {
+.ship-page_battle:hover {
   background: var(--brass-bright);
   color: var(--ink);
 }
 
-.ship-page_confirm:disabled {
+.ship-page_battle:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
+.ship-page_battle:disabled:hover {
+  background: var(--brass);
+  color: var(--parchment);
+}
+
 .ship-page_reset:focus-visible,
-.ship-page_confirm:focus-visible {
+.ship-page_battle:focus-visible {
   outline: 2px solid var(--brass-bright);
   outline-offset: 2px;
 }
