@@ -28,15 +28,13 @@ function UIController() {
         document.querySelector("section.ship-page").hidden = false;
     }
 
-    function renderGrid() {
-        const gridContainer = document.querySelector(".ship-page_grid");
-
+    function renderGrid(gridContainer, pageName) {
         // 0. clear grid
         gridContainer.innerHTML = "";
 
         // 1. add a empty corner
         const gridCorner = document.createElement("div");
-        gridCorner.classList.add("ship-page_grid-corner");
+        gridCorner.classList.add(`${pageName}-page_grid-corner`);
         gridContainer.appendChild(gridCorner);
 
         // 2. add col label
@@ -44,7 +42,7 @@ function UIController() {
         const unicode_A = "A".charCodeAt(0);
         for (let i = 0; i < gridSize; i++) {
             const gridLabel = document.createElement("div");
-            gridLabel.classList.add("ship-page_grid-label", "ship-page_grid-label-col");
+            gridLabel.classList.add(`${pageName}-page_grid-label`, `${pageName}-page_grid-label-col`);
             gridLabel.textContent = String.fromCharCode(unicode_A+i);
 
             gridContainer.appendChild(gridLabel);
@@ -54,21 +52,25 @@ function UIController() {
         //  3a. for each add grid cells
         for (let rowLabel = 1; rowLabel <= gridSize; rowLabel++) {
             const label = document.createElement("div");
-            label.classList.add("ship-page_grid-label", "ship-page_grid-label-row");
+            label.classList.add(`${pageName}-page_grid-label`, `${pageName}-page_grid-label-row`);
             label.textContent = rowLabel;
             gridContainer.appendChild(label);
             const row = rowLabel-1;
 
-            for (let cellCol = 0; cellCol < gridSize; cellCol++) {
+            for (let col = 0; col < gridSize; col++) {
                 const cell = document.createElement("div");
-                cell.classList.add("ship-page_cell");
-                if (AppController.getMyBoard().getCellItem([row, cellCol]) instanceof Ship)
+                cell.classList.add(`${pageName}-page_cell`);
+                if (AppController.getMyBoard().getCellItem([row, col]) instanceof Ship)
                     cell.classList.add("is-ship");
-                cell.dataset.row = row;
-                cell.dataset.col = cellCol;
 
-                if (AppController.getMyBoard().getCellItem([Number(rowLabel)-1, Number(cellCol)]) instanceof Ship)
-                    cell.classList.add("is-ship");
+                const attackedCells = AppController.getMyBoard().getAttackedCells();
+                if (pageName === "battle" && attackedCells.has(`${row}, ${col}`)) {
+                    const status = attackedCells.get(`${row}, ${col}`);
+                    const className = `is-${status}`;
+                    cell.classList.add(className);
+                }
+                cell.dataset.row = row;
+                cell.dataset.col = col;
 
                 gridContainer.appendChild(cell);
             }
@@ -97,7 +99,8 @@ function UIController() {
     }
 
     function renderShipPage() {
-        renderGrid();
+        const gridContainer = document.querySelector(".ship-page_grid");
+        renderGrid(gridContainer, "ship");
         renderFleet();
 
         // enable start-battle button if all ships are placed
@@ -248,7 +251,13 @@ function UIController() {
     }
 
     function renderBattlePage() {
-        
+        // 1. render friendly waters
+        const friendlyWaters = document.querySelector(".battle-page_grid[data-board=friendly]");
+        renderGrid(friendlyWaters, "battle");
+
+        // 2. render enemy waters
+
+        // 3. update whose turn
     }
 
     function setEventListeners() {
