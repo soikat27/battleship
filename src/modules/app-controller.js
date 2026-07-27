@@ -3,7 +3,7 @@ import Player from "./player.js";
 
 const AppController = (() => {
     const players = new Array(2);
-    const currentMove = 0;
+    let currentTurn = 0;
 
     function setupPlayers(p1Name, p2Name=undefined) {
         // player-1
@@ -19,24 +19,42 @@ const AppController = (() => {
         players[1] = player2;
     }
 
-    function getMyBoard() {
-        if (!players[0])
-            throw new Error("Please setup players first!");
-            
+    function getMyBoard() { 
         return players[0].gameboard;
     }
 
-    function makeMove(cell) {
-        // 1. throw error if all ships haven't been placed
-        const currPlayerBoard = players[currentMove].gameboard;
-        if (!currPlayerBoard.areShipsPlaced())
-            throw new Error("Please place all of your ships to proceed!");
-
-        const enemy = (currentMove === 0) ? 1 : 0;
-        // const enemyBoard = 
+    function placeOpponentShips() {
+        const opponentBoard = players[1].gameboard;
+        opponentBoard.placeShipsRandomly();
     }
 
-    return {setupPlayers, getMyBoard, makeMove};
+    function getOpponentHitMap() {
+        return players[1].gameboard.getAttackedCells();
+    }
+
+    function isReadyToBattle() {
+        const playerBoard = players[0].gameboard;
+        const opponentBoard = players[1].gameboard;
+        
+        if (!playerBoard.areShipsPlaced() || !opponentBoard.areShipsPlaced())
+            return false;
+
+        return true;
+    }
+
+    function attackCell(cell) {
+        // 1. throw error if all ships haven't been placed (both player's and opponent's)
+        if (isReadyToBattle() === false)
+            throw new Error("Please place all of your ships and wait for opponent's ships to be placed before proceeding!");
+
+        // 2. call receive-attack in curernt opponent's gameboard + update current turn
+        const atatckedPlayer = (currentTurn === 0) ? 1 : 0;
+        const attackedBoard = players[atatckedPlayer].gameboard;
+        attackedBoard.receiveAttack(cell);
+        currentTurn = (currentTurn === 0) ? 1 : 0;
+    }
+
+    return {setupPlayers, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, attackCell};
 })();
 
 export default AppController;

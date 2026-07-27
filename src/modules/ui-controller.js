@@ -196,10 +196,11 @@ function UIController() {
         const col = Number(cell.dataset.col);
         const myBoard = AppController.getMyBoard();
         const shipIndex = Number(event.dataTransfer.getData("ship-index"));
+        const orientation = myBoard.getCurrentOrientation();
 
         // 3. add ship -> in the event of error: display toast -> finally re-render shipPage
         try {
-            myBoard.placeShip([row, col], shipIndex);
+            myBoard.placeShip([row, col], orientation, shipIndex);
         } 
         catch(error) {
             const errorMsg = error.message;
@@ -223,6 +224,32 @@ function UIController() {
 
         // 2. re-render ship page
         renderShipPage();
+    }
+
+    function goToBattlePage(event) {
+        // 1. prevent default behavior
+        event.preventDefault();
+
+        // 2. place opponent's ships randomly
+
+
+
+        // 3. check if all ships are placed –> on success: go to battle-page or throw error
+        // if (AppController.isReadyToBattle() === false) {
+
+        // }
+
+
+
+
+
+
+
+        // 4. show ShipPage (toggle "hidden" class)
+        document.querySelector("section.name-page").hidden = true;
+        document.querySelector("section.ship-page").hidden = true;
+        document.querySelector("section.battle-page").hidden = false;
+
     }
 
     function setEventListeners() {
@@ -249,9 +276,13 @@ function UIController() {
         shipGrid.addEventListener("dragover", shipDragoverListener);
         shipGrid.addEventListener("drop", shipDropListener);
 
-        // reset ship placements
-        const resetShip = document.querySelector(".ship-page_reset");
-        resetShip.addEventListener("click", resetShipPlacement);
+        // reset ship placements btn
+        const resetShipBtn = document.querySelector(".ship-page_reset");
+        resetShipBtn.addEventListener("click", resetShipPlacement);
+
+        // start battle btn
+        const battleBtn = document.querySelector(".ship-page_battle");
+        battleBtn.addEventListener("click", goToBattlePage);
     }
 
     function initializeApp() {

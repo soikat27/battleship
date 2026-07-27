@@ -6,9 +6,8 @@ export default function Gameboard(size=10) {
 
     const grid = new Array(GAMEBOARD_SIZE);
     const shipsPlaced = new Set();
-    const attackedCells = new Set();
+    const attackedCells = new Map();
 
-    let sunkShips = 0;
     let currentOrientation = "H";
 
     function initializeBoard() {
@@ -31,7 +30,7 @@ export default function Gameboard(size=10) {
         return grid[cell[0]][cell[1]];
     }
 
-    function placeShip(startCell, shipIndex) {
+    function placeShip(startCell, orientation, shipIndex) {
         // 1. validate ship 
         if (shipsPlaced.size >= SHIP_INFO.length)
             throw new Error("All ships have been placed!");
@@ -40,7 +39,7 @@ export default function Gameboard(size=10) {
         if (shipsPlaced.has(shipIndex))
             throw new Error("This ship has already been placed!");
         
-        const cells = getCellsForPlacement(startCell, shipIndex);
+        const cells = getCellsForPlacement(startCell, orientation, shipIndex);
         if (cells === false)
             throw new Error("The ship can't be placed at this location! Please select a valid location.");
 
@@ -54,7 +53,7 @@ export default function Gameboard(size=10) {
         shipsPlaced.add(shipIndex);
     }
 
-    function getCellsForPlacement(startCell, shipIndex) {
+    function getCellsForPlacement(startCell, orientation, shipIndex) {
         if (isCellValid(startCell) === false)
             return false;
 
@@ -63,7 +62,7 @@ export default function Gameboard(size=10) {
         const shipLength = SHIP_INFO[shipIndex][0];
         const cells = [];
 
-        if (currentOrientation === "H") {
+        if (orientation === "H") {
             const endCol = startCol+shipLength-1;
             if (isCellValid([startRow, endCol]) === false)
                 return false;
@@ -74,7 +73,7 @@ export default function Gameboard(size=10) {
                 cells.push([startRow, i]);
             }
         }
-        else if (currentOrientation === "V") {
+        else if (orientation === "V") {
             const endRow = startRow+shipLength-1;
             if (isCellValid([endRow, startCol]) === false)
                 return false;
@@ -132,22 +131,44 @@ export default function Gameboard(size=10) {
         if (attackedCells.has(`${row}, ${col}`))
             throw Error ("Already hit! Choose another cell!");
 
-        if (grid[row][col] === undefined)
-            grid[row][col] = "miss";
-        else {
+        if (grid[row][col] instanceof Ship) {
             const ship = grid[row][col];
             ship.hit();
 
-            if (ship._isSunk === true)
-            sunkShips++;
+            attackedCells.set(`${row}, ${col}`, "hit");
         }
-        attackedCells.add(`${row}, ${col}`);
+        else
+            attackedCells.set(`${row}, ${col}`, "miss");
+    }
 
-        // TODO: check if all ships are sunk – maybe show gameover message
-        if (sunkShips >= shipsPlaced.size)
-            return;
+    function getAttackedCells() {
+        return attackedCells;
+    }
+
+    // for AI player
+    function placeShipsRandomly() {
+        let currentShipIndex = 0;
+        while (areShipsPlaced() === false) {
+            const row = Math.floor(Math.random()*10);
+            const col = Math.floor(Math.random()*10);
+            const cell = [row, col];
+            const orientation = (Math.random()*2 == 0) ? "H" : "V";
+
+            try {
+                placeShip(cell, orientation, currentShipIndex);
+                currentShipIndex++;
+            }
+            catch {
+                continue;
+            }
+        }
     }
 
     initializeBoard();
-    return {getBoardSize, getShipInfo, getCellItem, placeShip, getCellsForPlacement, getCurrentOrientation, setOrientation, isThisShipPlaced, areShipsPlaced, resetShipPlacement, receiveAttack};
+    return {getBoardSize, getShipInfo, getCellItem, placeShip, getCellsForPlacement, 
+        getCurrentOrientation, setOrientation, isThisShipPlaced, areShipsPlaced, resetShipPlacement, 
+        receiveAttack, getAttackedCells, placeShipsRandomly};
 }
+
+const testBoard = Gameboard();
+testBoard.placeShipsRandomly();
