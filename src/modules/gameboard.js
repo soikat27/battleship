@@ -152,7 +152,7 @@ export default function Gameboard(size=10) {
             const row = Math.floor(Math.random()*10);
             const col = Math.floor(Math.random()*10);
             const cell = [row, col];
-            const orientation = (Math.random()*2 == 0) ? "H" : "V";
+            const orientation = (Math.floor(Math.random()*2) === 0) ? "H" : "V";
 
             try {
                 placeShip(cell, orientation, currentShipIndex);

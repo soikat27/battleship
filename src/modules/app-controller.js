@@ -42,6 +42,10 @@ const AppController = (() => {
         return true;
     }
 
+    function getCurrentTurn() {
+        return currentTurn;
+    }
+
     function attackCell(cell) {
         // 1. throw error if all ships haven't been placed (both player's and opponent's)
         if (isReadyToBattle() === false)
@@ -54,7 +58,8 @@ const AppController = (() => {
         currentTurn = (currentTurn === 0) ? 1 : 0;
     }
 
-    return {setupPlayers, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, attackCell};
+    return {setupPlayers, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, 
+        attackCell, getCurrentTurn};
 })();
 
 export default AppController;

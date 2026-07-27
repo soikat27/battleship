@@ -28,7 +28,7 @@ function UIController() {
         document.querySelector("section.ship-page").hidden = false;
     }
 
-    function renderGrid(gridContainer, pageName) {
+    function renderGrid(gridContainer, pageName, isEnemyWaters) {
         // 0. clear grid
         gridContainer.innerHTML = "";
 
@@ -60,10 +60,19 @@ function UIController() {
             for (let col = 0; col < gridSize; col++) {
                 const cell = document.createElement("div");
                 cell.classList.add(`${pageName}-page_cell`);
-                if (AppController.getMyBoard().getCellItem([row, col]) instanceof Ship)
+
+                // class: is-ship handling
+                if (isEnemyWaters === false && AppController.getMyBoard().getCellItem([row, col]) instanceof Ship)
                     cell.classList.add("is-ship");
 
-                const attackedCells = AppController.getMyBoard().getAttackedCells();
+                // appropriate map for board type – friendly or enemy
+                let attackedCells;
+                if (isEnemyWaters === false)
+                    attackedCells = AppController.getMyBoard().getAttackedCells();
+                else
+                    attackedCells = AppController.getOpponentHitMap();
+
+                // if battle-page: is-hit/is-miss handling
                 if (pageName === "battle" && attackedCells.has(`${row}, ${col}`)) {
                     const status = attackedCells.get(`${row}, ${col}`);
                     const className = `is-${status}`;
@@ -100,7 +109,7 @@ function UIController() {
 
     function renderShipPage() {
         const gridContainer = document.querySelector(".ship-page_grid");
-        renderGrid(gridContainer, "ship");
+        renderGrid(gridContainer, "ship", false);
         renderFleet();
 
         // enable start-battle button if all ships are placed
@@ -179,7 +188,7 @@ function UIController() {
     }
 
     function shipDragoverListener(event) {
-        // 1. confirm if the event fired from a grid cell
+        // 1. confirm if the event's fired from a grid cell
         const cell = event.target.closest(".ship-page_cell");
         if (!cell)
             return;
@@ -253,11 +262,15 @@ function UIController() {
     function renderBattlePage() {
         // 1. render friendly waters
         const friendlyWaters = document.querySelector(".battle-page_grid[data-board=friendly]");
-        renderGrid(friendlyWaters, "battle");
+        renderGrid(friendlyWaters, "battle", false);
 
         // 2. render enemy waters
+        const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
+        renderGrid(enemyWaters, "battle", true);
 
         // 3. update whose turn
+        const turnLabel = document.querySelector(".battle-page_turn");
+        turnLabel.textContent = (AppController.getCurrentTurn() === 0) ? "Your turn" : "Computer's turn";
     }
 
     function setEventListeners() {
@@ -291,6 +304,9 @@ function UIController() {
         // start battle btn
         const battleBtn = document.querySelector(".ship-page_battle");
         battleBtn.addEventListener("click", goToBattlePage);
+
+        // hit cells in enemy water
+        // const 
     }
 
     function initializeApp() {
