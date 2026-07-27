@@ -231,25 +231,24 @@ function UIController() {
         event.preventDefault();
 
         // 2. place opponent's ships randomly
+        AppController.placeOpponentShips();
 
+        // 3. check if all ships are placed –> on success: go to battle-page or return without actions
+        if (AppController.isReadyToBattle() === false)
+            return;
 
+        // 4. render
+        renderBattlePage();
 
-        // 3. check if all ships are placed –> on success: go to battle-page or throw error
-        // if (AppController.isReadyToBattle() === false) {
-
-        // }
-
-
-
-
-
-
-
-        // 4. show ShipPage (toggle "hidden" class)
+        // 5. show ShipPage (toggle "hidden" class)
         document.querySelector("section.name-page").hidden = true;
         document.querySelector("section.ship-page").hidden = true;
         document.querySelector("section.battle-page").hidden = false;
 
+    }
+
+    function renderBattlePage() {
+        
     }
 
     function setEventListeners() {

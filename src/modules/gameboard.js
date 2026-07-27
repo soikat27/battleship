@@ -169,6 +169,3 @@ export default function Gameboard(size=10) {
         getCurrentOrientation, setOrientation, isThisShipPlaced, areShipsPlaced, resetShipPlacement, 
         receiveAttack, getAttackedCells, placeShipsRandomly};
 }
-
-const testBoard = Gameboard();
-testBoard.placeShipsRandomly();
