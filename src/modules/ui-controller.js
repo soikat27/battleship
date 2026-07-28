@@ -286,13 +286,19 @@ function UIController() {
             return;
 
         // 2. attack cell (my turn) + render page
+        if (AppController.getCurrentTurn() !== 0)
+            return;
         AppController.attackCell([Number(row), Number(col)]);
+        const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
+        enemyWaters.classList.add("is-locked");
         setTimeout(() => {
             renderBattlePage();
         }, 400);
         
+        // 3. simulate computer attck
         setTimeout(() => {
             AppController.simulateComputerMove();
+            enemyWaters.classList.remove("is-locked");
             renderBattlePage();
         }, 1500);
     }
