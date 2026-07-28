@@ -1,7 +1,12 @@
 import AppController from "./app-controller.js";
 import Ship from "./ship.js";
+import inGameMusicFile from "../assets/sounds/game-music.mp3";
+import fireSoundFile from "../assets/sounds/fire.mp3";
 
 function UIController() {
+    const gameMusic = new Audio(inGameMusicFile);
+    const fireAudio = new Audio(fireSoundFile);
+
     function goToShipPage(event) {
         // 1. prevent default behavior + validate and report inputs
         event.preventDefault();
@@ -14,7 +19,8 @@ function UIController() {
             return;
         }
 
-        // 2. setup game in AppController module
+        // 2. play music --> setup game in AppController module
+        playGameMusic();
         let p1Name = playerNameInput.value.trim();
         p1Name = p1Name.slice(0, 1).toUpperCase() + p1Name.slice(1);
         AppController.setupPlayers(p1Name);
@@ -26,6 +32,14 @@ function UIController() {
         document.querySelector("section.name-page").hidden = true;
         document.querySelector("section.battle-page").hidden = true;
         document.querySelector("section.ship-page").hidden = false;
+    }
+
+    function playGameMusic() {
+        // setup and play game music
+        gameMusic.currentTime = 0;
+        gameMusic.volume = 0.3;
+        gameMusic.loop = true;
+        gameMusic.play();
     }
 
     function renderGrid(gridContainer, pageName, isEnemyWaters) {
@@ -285,10 +299,11 @@ function UIController() {
         if (isAttacked)
             return;
 
-        // 2. attack cell (my turn) + render page and following that simulate computer attack
+        // 2. attack cell (my turn) & play fireSound + render page and following that simulate computer attack
         const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
         if (AppController.getCurrentTurn() === 0) {
             AppController.attackCell([Number(row), Number(col)]);
+            playFireSound();
             enemyWaters.classList.add("is-locked");
             setTimeout(() => {
                 renderBattlePage();
@@ -305,8 +320,15 @@ function UIController() {
         }
     }
 
+    function playFireSound() {
+        fireAudio.currentTime = 0;
+        fireAudio.volume = 0.1;
+        fireAudio.play();
+    }
+
     function computerMove() {    
         AppController.simulateComputerMove();
+        playFireSound();
         renderBattlePage();
 
         if (AppController.getCurrentTurn() === 0) {
