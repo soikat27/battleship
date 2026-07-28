@@ -21,11 +21,12 @@ function UIController() {
 
         // 2. play music --> setup game in AppController module
         playGameMusic();
-        let p1Name = playerNameInput.value.trim();
-        p1Name = p1Name.slice(0, 1).toUpperCase() + p1Name.slice(1);
+        let p1Name = playerNameInput.value;
         AppController.setupPlayers(p1Name);
 
-        // 3. render grid + ship dragbox
+        // 3. engrave player name --> render grid + ship dragbox
+        const captainName = document.querySelector(".player-name")
+        captainName.textContent = AppController.getCaptainName();
         renderShipPage();
 
         // 4. show ShipPage (toggle "hidden" class)

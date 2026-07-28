@@ -4,11 +4,16 @@ import Player from "./player.js";
 const AppController = (() => {
     const players = new Array(2);
     let currentTurn = 0;
+    let captainName = null;
 
     function setupPlayers(p1Name, p2Name=undefined) {
-        // player-1
+        // setup captain's name
+        captainName = p1Name.trim();
+        captainName = p1Name.slice(0, 1).toUpperCase() + p1Name.slice(1);
+
+        // player-1/captain
         const player1Board = Gameboard();
-        const player1 = new Player("Human", player1Board, p1Name);
+        const player1 = new Player("Human", player1Board, captainName);
         players[0] = player1;
 
         // player-2
@@ -17,6 +22,16 @@ const AppController = (() => {
         const player2Type = (p2Name === undefined) ? "AI" : "Human";
         const player2 = new Player(player2Type, player2Board, player2Name);
         players[1] = player2;
+
+        
+    }
+
+    function getCaptainName() {
+        if (players[0] === undefined)
+            throw new Error("Setup players first!");
+
+        return captainName;
+
     }
 
     function getMyBoard() { 
@@ -76,7 +91,7 @@ const AppController = (() => {
         attackCell(cell);
     }
 
-    return {setupPlayers, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, 
+    return {setupPlayers, getCaptainName, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, 
         attackCell, getCurrentTurn, simulateComputerMove};
 })();
 
