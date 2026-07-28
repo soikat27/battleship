@@ -54,8 +54,8 @@ const AppController = (() => {
         // 2. call receive-attack in curernt opponent's gameboard + update current turn
         const atatckedPlayer = (currentTurn === 0) ? 1 : 0;
         const attackedBoard = players[atatckedPlayer].gameboard;
-        attackedBoard.receiveAttack(cell);
-        currentTurn = (currentTurn === 0) ? 1 : 0;
+        if (attackedBoard.receiveAttack(cell) === false)
+            currentTurn = (currentTurn === 0) ? 1 : 0;
     }
 
     function simulateComputerMove() {

@@ -134,11 +134,13 @@ export default function Gameboard(size=10) {
         if (grid[row][col] instanceof Ship) {
             const ship = grid[row][col];
             ship.hit();
-
             attackedCells.set(`${row}, ${col}`, "hit");
+            return true;
         }
-        else
+        else {
             attackedCells.set(`${row}, ${col}`, "miss");
+            return false;
+        }       
     }
 
     function getAttackedCells() {

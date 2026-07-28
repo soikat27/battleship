@@ -223,7 +223,7 @@ function UIController() {
             setTimeout(() => {
                 shipToast.hidden = true;
                 shipToast.textContent = "";
-            }, 2500);
+            }, 800);
         }
         finally {
             renderShipPage();
@@ -285,22 +285,40 @@ function UIController() {
         if (isAttacked)
             return;
 
-        // 2. attack cell (my turn) + render page
-        if (AppController.getCurrentTurn() !== 0)
-            return;
-        AppController.attackCell([Number(row), Number(col)]);
+        // 2. attack cell (my turn) + render page and following that simulate computer attack
         const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
-        enemyWaters.classList.add("is-locked");
-        setTimeout(() => {
-            renderBattlePage();
-        }, 400);
-        
-        // 3. simulate computer attck
-        setTimeout(() => {
-            AppController.simulateComputerMove();
+        if (AppController.getCurrentTurn() === 0) {
+            AppController.attackCell([Number(row), Number(col)]);
+            enemyWaters.classList.add("is-locked");
+            setTimeout(() => {
+                renderBattlePage();
+                if (AppController.getCurrentTurn() === 0) {
+                    enemyWaters.classList.remove("is-locked");
+                    return;
+                }
+                else {
+                    setTimeout(() => {
+                        computerMove();
+                    }, 1500);
+                }
+            }, 500);
+        }
+    }
+
+    function computerMove() {    
+        AppController.simulateComputerMove();
+        renderBattlePage();
+
+        if (AppController.getCurrentTurn() === 0) {
+            const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
             enemyWaters.classList.remove("is-locked");
-            renderBattlePage();
-        }, 1500);
+            return;
+        }
+        else {
+            setTimeout(() => {
+                computerMove();
+            }, 1000);
+        }
     }
 
     function setEventListeners() {
