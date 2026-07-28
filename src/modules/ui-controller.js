@@ -276,25 +276,25 @@ function UIController() {
     function attackCell (event) {
         // 1. check if the event is fired from a grid-cell and has no is-hit or is-miss
         const cell = event.target.closest(".battle-page_cell");
+        if (!cell)
+            return;
+
         const row = cell.dataset.row;
         const col = cell.dataset.col;
         const isAttacked = (AppController.getOpponentHitMap().has(`${row}, ${col}`));
-        if (!cell || isAttacked)
+        if (isAttacked)
             return;
 
         // 2. attack cell (my turn) + render page
         AppController.attackCell([Number(row), Number(col)]);
         setTimeout(() => {
             renderBattlePage();
-        }, 500);
-
-        // 3. simulate a computer move – set timer -> (attack cell) -> re-render page
+        }, 400);
+        
         setTimeout(() => {
-            AppController.simulateComputerMove();;
-        }, 2000);
-        setTimeout(() => {
+            AppController.simulateComputerMove();
             renderBattlePage();
-        }, 2000);
+        }, 1500);
     }
 
     function setEventListeners() {
