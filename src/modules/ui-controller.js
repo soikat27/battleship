@@ -76,7 +76,7 @@ function UIController() {
                 const cell = document.createElement("div");
                 cell.classList.add(`${pageName}-page_cell`);
 
-                // class: is-ship handling
+                // class: is-ship + handling
                 if (isEnemyWaters === false && AppController.getMyBoard().getCellItem([row, col]) instanceof Ship)
                     cell.classList.add("is-ship");
 
@@ -278,14 +278,25 @@ function UIController() {
         // 1. render friendly waters
         const friendlyWaters = document.querySelector(".battle-page_grid[data-board=friendly]");
         renderGrid(friendlyWaters, "battle", false);
+        showSunkShips(friendlyWaters, 0);
 
         // 2. render enemy waters
         const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
         renderGrid(enemyWaters, "battle", true);
+        showSunkShips(enemyWaters, 1)
 
         // 3. update whose turn
         const turnLabel = document.querySelector(".battle-page_turn");
         turnLabel.textContent = (AppController.getCurrentTurn() === 0) ? "Your turn" : "Computer's turn";
+    }
+
+    function showSunkShips(gridContainer, playerIndex) {
+        const sunkShipCells = AppController.getSunkShipCells(playerIndex);
+
+        sunkShipCells.forEach(cell => {
+            const gridCell = gridContainer.querySelector(`[data-row="${cell[0]}"][data-col="${cell[1]}"]`);
+            gridCell.classList.add("is-ship-sunk");
+        });
     }
 
     function attackCell (event) {

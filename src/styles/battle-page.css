@@ -144,6 +144,16 @@
   border-color: rgba(42, 51, 36, 0.4);
 }
 
+/* Sunk ships — visible on both boards, slow reddish pulse (beats .is-ship ink) */
+.battle-page_board-friendly .battle-page_cell.is-ship-sunk,
+.battle-page_board-friendly .battle-page_cell.is-ship.is-ship-sunk,
+.battle-page_board-friendly .battle-page_cell.is-ship.is-hit.is-ship-sunk,
+.battle-page_board-enemy .battle-page_cell.is-ship-sunk {
+  background: var(--hit);
+  border-color: var(--hit-bright);
+  animation: sunk-pulse 2.4s ease-in-out infinite;
+}
+
 /* Hit / miss markers (circles via ::after) */
 .battle-page_cell.is-hit::after,
 .battle-page_cell.is-miss::after {
@@ -282,6 +292,12 @@
   background: var(--sea);
 }
 
+.battle-page_marker.is-ship-sunk {
+  background: var(--hit);
+  border-color: var(--hit-bright);
+  animation: sunk-pulse 2.4s ease-in-out infinite;
+}
+
 .battle-page_turn {
   margin: var(--space-sm) 0 0;
   font-family: var(--font-display);
@@ -311,5 +327,28 @@
 
   .battle-page_grid-label {
     font-size: 0.7rem;
+  }
+}
+
+@keyframes sunk-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  45% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.75;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .battle-page_board-friendly .battle-page_cell.is-ship-sunk,
+  .battle-page_board-friendly .battle-page_cell.is-ship.is-ship-sunk,
+  .battle-page_board-friendly .battle-page_cell.is-ship.is-hit.is-ship-sunk,
+  .battle-page_board-enemy .battle-page_cell.is-ship-sunk,
+  .battle-page_marker.is-ship-sunk {
+    animation: none;
   }
 }

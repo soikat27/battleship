@@ -21,9 +21,7 @@ const AppController = (() => {
         const player2Name = (p2Name === undefined) ? "Computer" : p2Name;
         const player2Type = (p2Name === undefined) ? "AI" : "Human";
         const player2 = new Player(player2Type, player2Board, player2Name);
-        players[1] = player2;
-
-        
+        players[1] = player2; 
     }
 
     function getCaptainName() {
@@ -31,7 +29,6 @@ const AppController = (() => {
             throw new Error("Setup players first!");
 
         return captainName;
-
     }
 
     function getMyBoard() { 
@@ -91,8 +88,27 @@ const AppController = (() => {
         attackCell(cell);
     }
 
-    return {setupPlayers, getCaptainName, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, 
-        attackCell, getCurrentTurn, simulateComputerMove};
+    function getSunkShips(playerIndex) {
+        const playerBoard = players[playerIndex].gameboard;
+        const sunkShips = playerBoard.getSunkShips();
+
+        return sunkShips;
+    }
+
+    function getSunkShipCells(playerIndex) {
+        const sunkShips = getSunkShips(playerIndex);
+        const cells = [];
+        const playerBoard = players[playerIndex].gameboard;
+
+        sunkShips.forEach(shipIndex => {
+            const shipCells = playerBoard.getShipCells(shipIndex);
+            cells.push(...shipCells);
+        });
+        return cells;
+    }
+
+    return {setupPlayers, getCaptainName, getMyBoard, placeOpponentShips, getOpponentHitMap, 
+        isReadyToBattle, attackCell, getCurrentTurn, simulateComputerMove, getSunkShips, getSunkShipCells};
 })();
 
 export default AppController;

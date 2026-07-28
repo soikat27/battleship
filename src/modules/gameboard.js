@@ -5,8 +5,9 @@ export default function Gameboard(size=10) {
     const SHIP_INFO = [[5, "carrier"], [4, "battleship"], [3, "cruiser"], [3, "submarine"], [2, "destroyer"]];
 
     const grid = new Array(GAMEBOARD_SIZE);
-    const shipsPlaced = new Set();
+    const shipsPlaced = new Map();
     const attackedCells = new Map();
+    const shipCellMap = new Map();
 
     let currentOrientation = "H";
 
@@ -17,6 +18,7 @@ export default function Gameboard(size=10) {
                 grid[i][j] = undefined;
         }    
     }
+    initializeBoard();
 
     function getBoardSize() {
         return GAMEBOARD_SIZE;
@@ -50,7 +52,8 @@ export default function Gameboard(size=10) {
             const col = cell[1];
             grid[row][col] = ship;
         });
-        shipsPlaced.add(shipIndex);
+        shipsPlaced.set(shipIndex, ship);
+        shipCellMap.set(shipIndex, cells);
     }
 
     function getCellsForPlacement(startCell, orientation, shipIndex) {
@@ -117,9 +120,24 @@ export default function Gameboard(size=10) {
         return !(shipsPlaced.size < SHIP_INFO.length);
     }
 
+    function getShipCells(shipIndex) {
+        if (shipCellMap.has(shipIndex))
+            return shipCellMap.get(shipIndex);
+    }
+
     function resetShipPlacement() {
         initializeBoard();
         shipsPlaced.clear();
+    }
+
+    function getSunkShips() {
+        const sunkShips = [];
+        shipsPlaced.forEach((value, key) => {
+            if (value._isSunk === true)
+                sunkShips.push(key);
+        });
+
+        return sunkShips;
     }
 
     function receiveAttack(cell) {
@@ -166,8 +184,7 @@ export default function Gameboard(size=10) {
         }
     }
 
-    initializeBoard();
-    return {getBoardSize, getShipInfo, getCellItem, placeShip, getCellsForPlacement, 
-        getCurrentOrientation, setOrientation, isThisShipPlaced, areShipsPlaced, resetShipPlacement, 
-        receiveAttack, getAttackedCells, placeShipsRandomly};
+    return {getBoardSize, getShipInfo, getCellItem, placeShip, getCurrentOrientation, 
+        setOrientation, isThisShipPlaced, areShipsPlaced, getShipCells, resetShipPlacement, 
+        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly};
 }
