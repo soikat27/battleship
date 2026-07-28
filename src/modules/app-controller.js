@@ -58,8 +58,26 @@ const AppController = (() => {
         currentTurn = (currentTurn === 0) ? 1 : 0;
     }
 
+    function simulateComputerMove() {
+        if (currentTurn !== 1)
+            return;
+
+        let row = Math.floor(Math.random()*10);
+        let col = Math.floor(Math.random()*10);
+        let cellKey = `${row}, ${col}`;
+
+        const friendlyWatersAttackedCells = players[0].gameboard.getAttackedCells();
+        while (friendlyWatersAttackedCells.has(cellKey)) {
+            row = Math.floor(Math.random()*10);
+            col = Math.floor(Math.random()*10);
+            cellKey = `${row}, ${col}`;
+        }
+        const cell = [row, col];
+        attackCell(cell);
+    }
+
     return {setupPlayers, getMyBoard, placeOpponentShips, getOpponentHitMap, isReadyToBattle, 
-        attackCell, getCurrentTurn};
+        attackCell, getCurrentTurn, simulateComputerMove};
 })();
 
 export default AppController;

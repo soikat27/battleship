@@ -273,6 +273,30 @@ function UIController() {
         turnLabel.textContent = (AppController.getCurrentTurn() === 0) ? "Your turn" : "Computer's turn";
     }
 
+    function attackCell (event) {
+        // 1. check if the event is fired from a grid-cell and has no is-hit or is-miss
+        const cell = event.target.closest(".battle-page_cell");
+        const row = cell.dataset.row;
+        const col = cell.dataset.col;
+        const isAttacked = (AppController.getOpponentHitMap().has(`${row}, ${col}`));
+        if (!cell || isAttacked)
+            return;
+
+        // 2. attack cell (my turn) + render page
+        AppController.attackCell([Number(row), Number(col)]);
+        setTimeout(() => {
+            renderBattlePage();
+        }, 500);
+
+        // 3. simulate a computer move – set timer -> (attack cell) -> re-render page
+        setTimeout(() => {
+            AppController.simulateComputerMove();;
+        }, 2000);
+        setTimeout(() => {
+            renderBattlePage();
+        }, 2000);
+    }
+
     function setEventListeners() {
         // name-page form
         const namePageForm = document.querySelector(".name-page_form");
@@ -306,7 +330,8 @@ function UIController() {
         battleBtn.addEventListener("click", goToBattlePage);
 
         // hit cells in enemy water
-        // const 
+        const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
+        enemyWaters.addEventListener("click", attackCell);
     }
 
     function initializeApp() {
