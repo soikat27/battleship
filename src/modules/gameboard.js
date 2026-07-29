@@ -10,14 +10,9 @@ export default function Gameboard(size=10) {
     const shipCellMap = new Map();
 
     let currentOrientation = "H";
-    // for computer intelligence
+    // computer intelligence
     let openHitCell = null;
     let predictiveCells = null;
-
-    // computer Intelligence
-    let lastOpenHit = null;
-    let predictiveDirection1 = null;
-    let predictiveDirection2 = null;
 
     function initializeBoard() {
         for (let i = 0; i < grid.length; i++) {
@@ -161,26 +156,9 @@ export default function Gameboard(size=10) {
             const ship = grid[row][col];
             ship.hit();
             attackedCells.set(`${row}, ${col}`, "hit");
-
-            // bookkeeping for computer Intelligence
-            if (ship._isSunk === true) {
-                lastOpenHit = null;
-                predictiveDirection1 = null;
-                predictiveDirection2 = null;
-            }    
-            else {
-                if (lastOpenHit !== null) {
-                    predictiveDirection1 = [(row-lastOpenHit[0]), (col-lastOpenHit[1])];
-                    predictiveDirection2 = [(lastOpenHit[0]-row), (lastOpenHit[1]-col)];
-                }
-                lastOpenHit = [row, col];
-            }
-
             return true;
         }
         else {
-            predictiveDirection1 = null;
-            predictiveDirection2 = null;
             attackedCells.set(`${row}, ${col}`, "miss");
             return false;
         }       
