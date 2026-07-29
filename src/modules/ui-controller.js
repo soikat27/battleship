@@ -2,10 +2,14 @@ import AppController from "./app-controller.js";
 import Ship from "./ship.js";
 import inGameMusicFile from "../assets/sounds/game-music.mp3";
 import fireSoundFile from "../assets/sounds/fire.mp3";
+import victorySoundFile from "../assets/sounds/victory.mp3";
+import lossSoundFile from "../assets/sounds/loss.wav";
 
 function UIController() {
     const gameMusic = new Audio(inGameMusicFile);
     const fireAudio = new Audio(fireSoundFile);
+    const victoryAudio = new Audio(victorySoundFile);
+    const lossAudio = new Audio(lossSoundFile);
 
     function goToShipPage(event) {
         // 1. prevent default behavior + validate and report inputs
@@ -317,8 +321,10 @@ function UIController() {
             AppController.attackCell([Number(row), Number(col)]);
             playFireSound();
             // check if game is over
-            if (AppController.isGameOver())
+            if (AppController.isGameOver()) {
                 showGameOverDialog();
+                return;
+            }
 
             enemyWaters.classList.add("is-locked");
             setTimeout(() => {
@@ -347,8 +353,10 @@ function UIController() {
         playFireSound();
         renderBattlePage();
         // check if game is over
-        if (AppController.isGameOver())
-                showGameOverDialog();
+        if (AppController.isGameOver()) {
+            showGameOverDialog();
+            return;
+        }     
 
         if (AppController.getCurrentTurn() === 0) {
             const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
@@ -370,14 +378,36 @@ function UIController() {
         if (AppController.getWinner() === "Computer") {
             dialogTitle.textContent = "Fleet Lost, Captain!";
             dialogMsg.textContent = "Your chart runs red. The enemy holds the waters — refit and sail again.";
+            playLossSound();
         }
             
         else {
             dialogTitle.textContent = `Victory, Captain ${AppController.getCaptainName()}!`;
             dialogMsg.textContent = "Enemy waters are clear. Every hull is on the bottom — the sea is yours.";
+            playVictorySound();
         }
 
         dialog.showModal();
+    }
+
+    function playVictorySound() {
+        // pause in-game music
+        gameMusic.pause();
+        gameMusic.currentTime = 0;
+
+        victoryAudio.currentTime = 0;
+        victoryAudio.volume = 0.5;
+        victoryAudio.play();
+    }
+
+    function playLossSound() {
+        // pause in-game music
+        gameMusic.pause();
+        gameMusic.currentTime = 0;
+
+        lossAudio.currentTime = 0;
+        lossAudio.volume = 0.5;
+        lossAudio.play();
     }
 
     function setEventListeners() {
