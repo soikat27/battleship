@@ -309,6 +309,72 @@
   color: var(--ink);
 }
 
+.battle-page_end {
+  margin: auto;
+  max-width: min(24rem, calc(100vw - 2rem));
+  padding: 1.5rem 1.75rem;
+  border: 1px solid var(--brass);
+  background: rgba(228, 213, 181, 0.98);
+  box-shadow: 0 8px 28px rgba(42, 51, 36, 0.28);
+  color: var(--ink);
+}
+
+.battle-page_end[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+.battle-page_end::backdrop {
+  background: rgba(42, 51, 36, 0.45);
+}
+
+.battle-page_end-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.battle-page_end-message {
+  margin: 0;
+  max-width: 20rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.battle-page_end-btn {
+  margin-top: var(--space-xs);
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--ink);
+  background: var(--brass);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--parchment);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.battle-page_end-btn:hover {
+  background: var(--brass-bright);
+  color: var(--ink);
+}
+
+.battle-page_end-btn:focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 2px;
+}
+
 @media (max-width: 900px) {
   .battle-page {
     --battle-cell: 2.75rem;

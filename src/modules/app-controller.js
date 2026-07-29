@@ -107,8 +107,27 @@ const AppController = (() => {
         return cells;
     }
 
+    function isGameOver() {
+        const playerBoard = players[0].gameboard;
+        const computerBoard = players[1].gameboard;
+
+        return (playerBoard.isFleetSunk() || computerBoard.isFleetSunk());
+    }
+
+    function getWinner() {
+        if (!isGameOver())
+            return null;
+
+        const playerBoard = players[0].gameboard;
+        if (playerBoard.isFleetSunk())
+            return players[1].name;
+        else
+            return players[0].name;
+    }
+
     return {setupPlayers, getCaptainName, getMyBoard, placeOpponentShips, getOpponentHitMap, 
-        isReadyToBattle, attackCell, getCurrentTurn, simulateComputerMove, getSunkShips, getSunkShipCells};
+        isReadyToBattle, attackCell, getCurrentTurn, simulateComputerMove, getSunkShips, 
+        getSunkShipCells, isGameOver, getWinner};
 })();
 
 export default AppController;

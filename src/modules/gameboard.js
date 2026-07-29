@@ -184,7 +184,12 @@ export default function Gameboard(size=10) {
         }
     }
 
+    function isFleetSunk() {
+        const totalSunkShips = getSunkShips().length;
+        return !(totalSunkShips < shipsPlaced.size);
+    }
+
     return {getBoardSize, getShipInfo, getCellItem, placeShip, getCurrentOrientation, 
         setOrientation, isThisShipPlaced, areShipsPlaced, getShipCells, resetShipPlacement, 
-        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly};
+        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly, isFleetSunk};
 }

@@ -316,6 +316,10 @@ function UIController() {
         if (AppController.getCurrentTurn() === 0) {
             AppController.attackCell([Number(row), Number(col)]);
             playFireSound();
+            // check if game is over
+            if (AppController.isGameOver())
+                showGameOverDialog();
+
             enemyWaters.classList.add("is-locked");
             setTimeout(() => {
                 renderBattlePage();
@@ -342,6 +346,9 @@ function UIController() {
         AppController.simulateComputerMove();
         playFireSound();
         renderBattlePage();
+        // check if game is over
+        if (AppController.isGameOver())
+                showGameOverDialog();
 
         if (AppController.getCurrentTurn() === 0) {
             const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
@@ -353,6 +360,24 @@ function UIController() {
                 computerMove();
             }, 1000);
         }
+    }
+
+    function showGameOverDialog() {
+        const dialog = document.querySelector(".battle-page_end");
+        const dialogTitle = document.querySelector(".battle-page_end-title");
+        const dialogMsg = document.querySelector(".battle-page_end-message");
+
+        if (AppController.getWinner() === "Computer") {
+            dialogTitle.textContent = "Fleet Lost, Captain!";
+            dialogMsg.textContent = "Your chart runs red. The enemy holds the waters — refit and sail again.";
+        }
+            
+        else {
+            dialogTitle.textContent = `Victory, Captain ${AppController.getCaptainName()}!`;
+            dialogMsg.textContent = "Enemy waters are clear. Every hull is on the bottom — the sea is yours.";
+        }
+
+        dialog.showModal();
     }
 
     function setEventListeners() {
