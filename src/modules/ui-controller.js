@@ -410,6 +410,18 @@ function UIController() {
         lossAudio.play();
     }
 
+    function restartGame() {
+        AppController.resetGame();
+
+        // go back to name-page
+        document.querySelector("section.ship-page").hidden = true;
+        document.querySelector("section.battle-page").hidden = true;
+        document.querySelector("section.name-page").hidden = false;
+
+        const dialog = document.querySelector(".battle-page_end");
+        dialog.close();
+    }
+
     function setEventListeners() {
         // name-page form
         const namePageForm = document.querySelector(".name-page_form");
@@ -445,6 +457,10 @@ function UIController() {
         // hit cells in enemy water
         const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
         enemyWaters.addEventListener("click", attackCell);
+
+        // new battle button
+        const newBattleBtn = document.querySelector(".battle-page_end-btn");
+        newBattleBtn.addEventListener("click", restartGame);
     }
 
     function initializeApp() {

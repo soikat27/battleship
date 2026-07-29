@@ -2,7 +2,7 @@ import Gameboard from "./gameboard.js";
 import Player from "./player.js";
 
 const AppController = (() => {
-    const players = new Array(2);
+    let players = new Array(2);
     let currentTurn = 0;
     let captainName = null;
 
@@ -125,9 +125,15 @@ const AppController = (() => {
             return players[0].name;
     }
 
+    function resetGame() {
+        players = new Player(2);
+        currentTurn = 0;
+        captainName = null;
+    }
+
     return {setupPlayers, getCaptainName, getMyBoard, placeOpponentShips, getOpponentHitMap, 
         isReadyToBattle, attackCell, getCurrentTurn, simulateComputerMove, getSunkShips, 
-        getSunkShipCells, isGameOver, getWinner};
+        getSunkShipCells, isGameOver, getWinner, resetGame};
 })();
 
 export default AppController;

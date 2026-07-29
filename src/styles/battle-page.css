@@ -154,6 +154,12 @@
   animation: sunk-pulse 2.4s ease-in-out infinite;
 }
 
+.battle-page_cell.is-hit,
+.battle-page_cell.is-miss {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 /* Hit / miss markers (circles via ::after) */
 .battle-page_cell.is-hit::after,
 .battle-page_cell.is-miss::after {
