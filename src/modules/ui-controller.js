@@ -180,6 +180,9 @@ function UIController() {
 
     function shipDragstartListener(event) {
         // 1. check if the event is fired from a fleet item
+        if (event.target instanceof Element === false)
+            return;
+        
         const fleetItem = event.target.closest(".ship-page_fleet-item");
         if (!fleetItem)
             return;
@@ -320,15 +323,16 @@ function UIController() {
         if (AppController.getCurrentTurn() === 0) {
             AppController.attackCell([Number(row), Number(col)]);
             playFireSound();
-            // check if game is over
-            if (AppController.isGameOver()) {
-                showGameOverDialog();
-                return;
-            }
 
             enemyWaters.classList.add("is-locked");
             setTimeout(() => {
                 renderBattlePage();
+                // check if game is over
+                if (AppController.isGameOver()) {
+                    showGameOverDialog();
+                    return;
+                }
+                
                 if (AppController.getCurrentTurn() === 0) {
                     enemyWaters.classList.remove("is-locked");
                     return;
@@ -377,13 +381,13 @@ function UIController() {
 
         if (AppController.getWinner() === "Computer") {
             dialogTitle.textContent = "Fleet Lost, Captain!";
-            dialogMsg.textContent = "Your chart runs red. The enemy holds the waters — refit and sail again.";
+            dialogMsg.textContent = "The enemy holds the waters. Refit and sail again.";
             playLossSound();
         }
             
         else {
             dialogTitle.textContent = `Victory, Captain ${AppController.getCaptainName()}!`;
-            dialogMsg.textContent = "Enemy waters are clear. Every hull is on the bottom — the sea is yours.";
+            dialogMsg.textContent = "Enemy waters are clear and the sea is conquered.";
             playVictorySound();
         }
 
