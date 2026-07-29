@@ -66,8 +66,14 @@ const AppController = (() => {
         // 2. call receive-attack in curernt opponent's gameboard + update current turn
         const atatckedPlayer = (currentTurn === 0) ? 1 : 0;
         const attackedBoard = players[atatckedPlayer].gameboard;
-        if (attackedBoard.receiveAttack(cell) === false)
-            currentTurn = (currentTurn === 0) ? 1 : 0;
+        if (atatckedPlayer === 0) {
+            if (attackedBoard.receiveAttackAI(cell) === false)
+                currentTurn = (currentTurn === 0) ? 1 : 0;
+        }  
+        else {
+            if (attackedBoard.receiveAttack(cell) === false)
+                currentTurn = (currentTurn === 0) ? 1 : 0;
+        }
     }
 
     function simulateComputerMove() {
@@ -75,20 +81,19 @@ const AppController = (() => {
             return;
 
         const playerBoard = players[0].gameboard;
-        const predictedCell = playerBoard.predictAdjacentHitCell();
         let row;
         let col;
-        let cellKey;
-        if (predictedCell !== null) {
-            row = predictedCell[0];
-            col = predictedCell[1];
-            cellKey = `${row}, ${col}`;
-        }
-        else {
+        const predictiveCells = playerBoard.predictAdjacentCells();
+        if (predictiveCells === null) {
             row = Math.floor(Math.random()*10);
             col = Math.floor(Math.random()*10);
-            cellKey = `${row}, ${col}`;
         }
+        else {
+            const cell = predictiveCells[0][0];
+            row = cell[0];
+            col = cell[1];
+        }
+        let cellKey = `${row}, ${col}`;
 
         const friendlyWatersAttackedCells = players[0].gameboard.getAttackedCells();
         while (friendlyWatersAttackedCells.has(cellKey)) {

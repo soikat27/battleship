@@ -10,6 +10,9 @@ export default function Gameboard(size=10) {
     const shipCellMap = new Map();
 
     let currentOrientation = "H";
+    // for computer intelligence
+    let openHitCell = null;
+    let predictiveCells = null;
 
     // computer Intelligence
     let lastOpenHit = null;
@@ -206,36 +209,77 @@ export default function Gameboard(size=10) {
         }
     }
 
-    function predictAdjacentHitCell() {
-        if (lastOpenHit === null)
+    function receiveAttackAI(cell) {
+        if (isCellValid(cell) === false)
+            throw new Error("Invalid cell!");
+
+        const row = cell[0];
+        const col = cell[1];
+        if (attackedCells.has(`${row}, ${col}`))
+            throw Error ("Already hit! Choose another cell!");
+
+        if (grid[row][col] instanceof Ship) {
+            const ship = grid[row][col];
+            ship.hit();
+            attackedCells.set(`${row}, ${col}`, "hit");
+
+            // AI bookkeeping
+            if (ship._isSunk === false) {
+                if (openHitCell === null)
+                    openHitCell = [row, col];
+                else {
+                    predictiveCells[0].shift();
+                    if (predictiveCells[0].length === 0)
+                        predictiveCells.shift();
+                }
+            }
+            else {
+                openHitCell = null;
+                predictiveCells = null;
+            }
+            return true;
+        }
+        else {
+            attackedCells.set(`${row}, ${col}`, "miss");
+            // AI bookkeeping
+            if (openHitCell !== null)
+                predictiveCells.shift();
+
+            return false;
+        }       
+    }
+
+    function predictAdjacentCells() {
+        // 1. if no openHitCell, return null
+        if (openHitCell === null)
             return null;
 
-        if (predictiveDirection1 === null) {
-            const lastHitRow = lastOpenHit[0];
-            const lastHitCol = lastOpenHit[1];
-            const adjCells = [[lastHitRow-1, lastHitCol], [lastHitRow+1, lastHitCol], 
-                                [lastHitRow, lastHitCol+1], [lastHitRow, lastHitCol-1]].filter(cell => {
-                                    return (isCellValid(cell) === true && attackedCells.has(`${cell[0]}, ${cell[1]}`) === false)
-                                });
-            if (adjCells.length === 0)
-                return null;
+        if (predictiveCells !== null)
+            return predictiveCells;
 
-            let cellIndex = Math.floor(Math.random()*adjCells.length);
-            let predCell = adjCells[cellIndex];
-            return predCell;
+        // 2. define directions. a. left.right.up.down, b. up.down.left.right, c. right.left.down.up, d. down.up.right.left
+        const dirSet = [ [[-1, 0], [1, 0], [0, 1], [0, -1]], [[0, 1], [0, -1], [-1, 0], [1, 0]], 
+                        [[1, 0], [-1, 0], [0, -1], [0, 1]], [[0, -1], [0, 1], [1, 0], [-1, 0]] ];
+        const currDirSet = dirSet[Math.floor(Math.random()*4)];
+        predictiveCells = [];
+
+        // 3. populate predictiveCells;
+        for (let dir of currDirSet) {
+            const currPredCells = [];
+
+            for (let i = 1; i <= 4; i++) {
+                const offset = [(dir[0]*i), (dir[1]*i)];
+                const predCell = [(openHitCell[0]+offset[0]), (openHitCell[1]+offset[1])];
+                if (isCellValid(predCell) && attackedCells.has(`${predCell[0]}, ${predCell[1]}`) === false)
+                    currPredCells.push(predCell);
+                else
+                    break;
+            }
+            if (currPredCells.length > 0)
+                predictiveCells.push(currPredCells);
+
         }
-
-        let predCell = [(lastOpenHit[0]+predictiveDirection1[0]), (lastOpenHit[1]+predictiveDirection1[1])];
-        if (isCellValid(predCell) === true && attackedCells.has(`${predCell[0]}, ${predCell[1]}`) === false)
-            return predCell;
-
-        predCell = [(lastOpenHit[0]+predictiveDirection2[0]), (lastOpenHit[1]+predictiveDirection2[1])];
-        if (isCellValid(predCell) === true && attackedCells.has(`${predCell[0]}, ${predCell[1]}`) === false)
-            return predCell;
-
-        predictiveDirection1 = null;
-        predictiveDirection2 = null;
-        return null;
+        return predictiveCells;
     }
 
     function isFleetSunk() {
@@ -245,5 +289,5 @@ export default function Gameboard(size=10) {
 
     return {getBoardSize, getShipInfo, getCellItem, placeShip, getCurrentOrientation, 
         setOrientation, isThisShipPlaced, areShipsPlaced, getShipCells, resetShipPlacement, 
-        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly, predictAdjacentHitCell, isFleetSunk};
+        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly, receiveAttackAI, predictAdjacentCells, isFleetSunk};
 }

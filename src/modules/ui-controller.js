@@ -348,7 +348,7 @@ function UIController() {
         fireAudio.play();
     }
 
-    function computerMove() {    
+    function computerMove() {
         AppController.simulateComputerMove();
         playFireSound();
         renderBattlePage();
