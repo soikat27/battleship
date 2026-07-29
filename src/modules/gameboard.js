@@ -11,6 +11,11 @@ export default function Gameboard(size=10) {
 
     let currentOrientation = "H";
 
+    // computer Intelligence
+    let lastOpenHit = null;
+    let predictiveDirection1 = null;
+    let predictiveDirection2 = null;
+
     function initializeBoard() {
         for (let i = 0; i < grid.length; i++) {
             grid[i] = new Array(grid.length);
@@ -153,9 +158,26 @@ export default function Gameboard(size=10) {
             const ship = grid[row][col];
             ship.hit();
             attackedCells.set(`${row}, ${col}`, "hit");
+
+            // bookkeeping for computer Intelligence
+            if (ship._isSunk === true) {
+                lastOpenHit = null;
+                predictiveDirection1 = null;
+                predictiveDirection2 = null;
+            }    
+            else {
+                if (lastOpenHit !== null) {
+                    predictiveDirection1 = [(row-lastOpenHit[0]), (col-lastOpenHit[1])];
+                    predictiveDirection2 = [(lastOpenHit[0]-row), (lastOpenHit[1]-col)];
+                }
+                lastOpenHit = [row, col];
+            }
+
             return true;
         }
         else {
+            predictiveDirection1 = null;
+            predictiveDirection2 = null;
             attackedCells.set(`${row}, ${col}`, "miss");
             return false;
         }       
@@ -184,6 +206,38 @@ export default function Gameboard(size=10) {
         }
     }
 
+    function predictAdjacentHitCell() {
+        if (lastOpenHit === null)
+            return null;
+
+        if (predictiveDirection1 === null) {
+            const lastHitRow = lastOpenHit[0];
+            const lastHitCol = lastOpenHit[1];
+            const adjCells = [[lastHitRow-1, lastHitCol], [lastHitRow+1, lastHitCol], 
+                                [lastHitRow, lastHitCol+1], [lastHitRow, lastHitCol-1]].filter(cell => {
+                                    return (isCellValid(cell) === true && attackedCells.has(`${cell[0]}, ${cell[1]}`) === false)
+                                });
+            if (adjCells.length === 0)
+                return null;
+
+            let cellIndex = Math.floor(Math.random()*adjCells.length);
+            let predCell = adjCells[cellIndex];
+            return predCell;
+        }
+
+        let predCell = [(lastOpenHit[0]+predictiveDirection1[0]), (lastOpenHit[1]+predictiveDirection1[1])];
+        if (isCellValid(predCell) === true && attackedCells.has(`${predCell[0]}, ${predCell[1]}`) === false)
+            return predCell;
+
+        predCell = [(lastOpenHit[0]+predictiveDirection2[0]), (lastOpenHit[1]+predictiveDirection2[1])];
+        if (isCellValid(predCell) === true && attackedCells.has(`${predCell[0]}, ${predCell[1]}`) === false)
+            return predCell;
+
+        predictiveDirection1 = null;
+        predictiveDirection2 = null;
+        return null;
+    }
+
     function isFleetSunk() {
         const totalSunkShips = getSunkShips().length;
         return !(totalSunkShips < shipsPlaced.size);
@@ -191,5 +245,5 @@ export default function Gameboard(size=10) {
 
     return {getBoardSize, getShipInfo, getCellItem, placeShip, getCurrentOrientation, 
         setOrientation, isThisShipPlaced, areShipsPlaced, getShipCells, resetShipPlacement, 
-        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly, isFleetSunk};
+        getSunkShips, receiveAttack, getAttackedCells, placeShipsRandomly, predictAdjacentHitCell, isFleetSunk};
 }

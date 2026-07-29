@@ -74,9 +74,21 @@ const AppController = (() => {
         if (currentTurn !== 1)
             return;
 
-        let row = Math.floor(Math.random()*10);
-        let col = Math.floor(Math.random()*10);
-        let cellKey = `${row}, ${col}`;
+        const playerBoard = players[0].gameboard;
+        const predictedCell = playerBoard.predictAdjacentHitCell();
+        let row;
+        let col;
+        let cellKey;
+        if (predictedCell !== null) {
+            row = predictedCell[0];
+            col = predictedCell[1];
+            cellKey = `${row}, ${col}`;
+        }
+        else {
+            row = Math.floor(Math.random()*10);
+            col = Math.floor(Math.random()*10);
+            cellKey = `${row}, ${col}`;
+        }
 
         const friendlyWatersAttackedCells = players[0].gameboard.getAttackedCells();
         while (friendlyWatersAttackedCells.has(cellKey)) {
