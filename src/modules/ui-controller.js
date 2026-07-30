@@ -272,7 +272,7 @@ function UIController() {
         const shipIndex = Number(event.dataTransfer.getData("ship-index"));
         const orientation = myBoard.getCurrentOrientation();
 
-        // 3. add ship -> in the event of error: display toast -> finally re-render shipPage
+        // 3. add ship -> in the event of error: display toast-message -> finally re-render ship page
         try {
             myBoard.placeShip([row, col], orientation, shipIndex);
         } 
@@ -377,13 +377,14 @@ function UIController() {
         // 2. attack cell (my turn) & play fireSound + render page and following that simulate computer attack
         const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
         if (AppController.getCurrentTurn() === 0) {
+            // 2a. attack cell, play sound, lock enemy waters
             AppController.attackCell([Number(row), Number(col)]);
             enemyWaters.classList.add("is-locked");
             playFireSound();
             
+            // 2b. schedule: render page -> gameOver check -> unlock enemy waters if my turn again or schedule computer move
             setTimeout(() => {
                 renderBattlePage();
-                // check if game is over
                 if (AppController.isGameOver()) {
                     showGameOverDialog();
                     return;
@@ -414,15 +415,18 @@ function UIController() {
      * player or chains another computer move on a hit.
      */
     function computerMove() {
+        // 1. make computer move, play sound, render page
         AppController.simulateComputerMove();
         playFireSound();
         renderBattlePage();
-        // check if game is over
+
+        // 2. check if game is over
         if (AppController.isGameOver()) {
             showGameOverDialog();
             return;
         }     
 
+        // 3. if miss, unlock enemy waters, else schedule another computer move (recursive)
         if (AppController.getCurrentTurn() === 0) {
             const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
             enemyWaters.classList.remove("is-locked");
