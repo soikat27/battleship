@@ -115,6 +115,10 @@ The same behavior applies on the [live demo](https://soikat27.github.io/battlesh
 - Click cells in **Enemy Waters** on your turn; wait through the computer’s turn when the grid locks
 - When the gameover dialog opens, hit **New Battle** to sail again from the name page
 
+### Upcoming features
+
+- **2-player (pass the device)** — take turns on one laptop or by spinning the monitor; a pass-device screen keeps each player from seeing the other’s board
+
 ## Available Scripts
 
 - `npm run dev` — Webpack Dev Server with hot reload
