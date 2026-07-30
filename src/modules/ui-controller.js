@@ -5,12 +5,21 @@ import fireSoundFile from "../assets/sounds/fire.mp3";
 import victorySoundFile from "../assets/sounds/victory.mp3";
 import lossSoundFile from "../assets/sounds/loss.wav";
 
+/**
+ * UIController — DOM, page switches, drag-and-drop placement,
+ * battle rendering, sounds, and turn flow.
+ * Talks to AppController for game state; returns { initializeApp }.
+ */
 function UIController() {
     const gameMusic = new Audio(inGameMusicFile);
     const fireAudio = new Audio(fireSoundFile);
     const victoryAudio = new Audio(victorySoundFile);
     const lossAudio = new Audio(lossSoundFile);
 
+    /**
+     * Name form submit → validate, setup players, show ship page.
+     * @param {SubmitEvent} event
+     */
     function goToShipPage(event) {
         // 1. prevent default behavior + validate and report inputs
         event.preventDefault();
@@ -39,6 +48,7 @@ function UIController() {
         document.querySelector("section.ship-page").hidden = false;
     }
 
+    /** Starts looping in-game music. */
     function playGameMusic() {
         // setup and play game music
         gameMusic.currentTime = 0;
@@ -47,6 +57,14 @@ function UIController() {
         gameMusic.play();
     }
 
+    /**
+     * Paints a labeled grid into a container (ship page or battle page).
+     * Friendly waters can show ships; enemy waters stay fogged.
+     * Battle page also paints hit/miss markers from the right attack map.
+     * @param {HTMLElement} gridContainer
+     * @param {"ship"|"battle"} pageName - class-name prefix for cells/labels
+     * @param {boolean} isEnemyWaters - true = fog of war (no is-ship)
+     */
     function renderGrid(gridContainer, pageName, isEnemyWaters) {
         // 0. clear grid
         gridContainer.innerHTML = "";
@@ -105,6 +123,7 @@ function UIController() {
         }
     }
 
+    /** Rebuilds the draggable fleet list from board ship info. */
     function renderFleet() {
         const fleetDiv = document.querySelector(".ship-page_fleet");
 
@@ -126,6 +145,7 @@ function UIController() {
         }  
     }
 
+    /** Re-renders ship grid + fleet, and toggles the Start Battle button. */
     function renderShipPage() {
         const gridContainer = document.querySelector(".ship-page_grid");
         renderGrid(gridContainer, "ship", false);
@@ -136,6 +156,10 @@ function UIController() {
         battleBtn.disabled = !(AppController.getMyBoard().areShipsPlaced());
     }
 
+    /**
+     * Custom validity messages for the captain name input.
+     * @param {HTMLInputElement} input
+     */
     function validatePlayerName(input) {
         // 1. clear custom validity
         input.setCustomValidity("");
@@ -152,6 +176,10 @@ function UIController() {
         input.reportValidity();
     }
 
+    /**
+     * Horizontal / Vertical button toggle for placement.
+     * @param {MouseEvent} event
+     */
     function setOrient(event) {
         // 1. determine current target's closest is H or V button
         if (!event.target.closest(".ship-page_orient-btn"))
@@ -178,6 +206,10 @@ function UIController() {
         }
     }
 
+    /**
+     * Dragstart on a fleet item — packs ship-index and sets the ghost image.
+     * @param {DragEvent} event
+     */
     function shipDragstartListener(event) {
         // 1. check if the event is fired from a fleet item
         if (event.target instanceof Element === false)
@@ -191,7 +223,7 @@ function UIController() {
         const shipIndex = fleetItem.dataset.shipIndex;
         event.dataTransfer.setData("ship-index", shipIndex);
 
-        // 3. set drag image: get orient & length -> toggle "is-vertical" -> add ghost-cell and attach to dragImage
+        // 3. set drag image: get orient & length -> toggle "is-vertical" accordingly -> add ghost-cell and attach to dragImage
         const orient = AppController.getMyBoard().getCurrentOrientation();
         const shipLength = Number(fleetItem.dataset.shipLength);
         const shipGhostDiv = document.querySelector(".ship-ghost");
@@ -209,6 +241,10 @@ function UIController() {
         event.dataTransfer.setDragImage(shipGhostDiv, 28, 28);
     }
 
+    /**
+     * Allows drop on ship-page grid cells.
+     * @param {DragEvent} event
+     */
     function shipDragoverListener(event) {
         // 1. confirm if the event's fired from a grid cell
         const cell = event.target.closest(".ship-page_cell");
@@ -219,6 +255,10 @@ function UIController() {
         event.preventDefault();        
     }
 
+    /**
+     * Drop a fleet ship onto the grid; toast on invalid placement.
+     * @param {DragEvent} event
+     */
     function shipDropListener(event) {
         // 1. confirm if the event fired from a grid cell
         const cell = event.target.closest(".ship-page_cell");
@@ -252,6 +292,7 @@ function UIController() {
         }
     }
 
+    /** Clears placements and re-renders the ship page. */
     function resetShipPlacement() {
         // 1. call ship-reset from AppController module
         AppController.getMyBoard().resetShipPlacement();
@@ -260,6 +301,10 @@ function UIController() {
         renderShipPage();
     }
 
+    /**
+     * Start Battle — place opponent ships, then show the battle page.
+     * @param {MouseEvent} event
+     */
     function goToBattlePage(event) {
         // 1. prevent default behavior
         event.preventDefault();
@@ -281,6 +326,7 @@ function UIController() {
 
     }
 
+    /** Paints both battle boards and the turn label. */
     function renderBattlePage() {
         // 1. render friendly waters
         const friendlyWaters = document.querySelector(".battle-page_grid[data-board=friendly]");
@@ -297,6 +343,11 @@ function UIController() {
         turnLabel.textContent = (AppController.getCurrentTurn() === 0) ? "Your turn" : "Computer's turn";
     }
 
+    /**
+     * Marks sunk-ship cells on a battle grid.
+     * @param {HTMLElement} gridContainer
+     * @param {0|1} playerIndex
+     */
     function showSunkShips(gridContainer, playerIndex) {
         const sunkShipCells = AppController.getSunkShipCells(playerIndex);
 
@@ -306,6 +357,11 @@ function UIController() {
         });
     }
 
+    /**
+     * Player click on enemy waters — fire, lock the grid, then either
+     * unlock (hit / still your turn) or schedule the computer move (miss).
+     * @param {MouseEvent} event
+     */
     function attackCell (event) {
         // 1. check if the event is fired from a grid-cell and has no is-hit or is-miss
         const cell = event.target.closest(".battle-page_cell");
@@ -346,12 +402,17 @@ function UIController() {
         }
     }
 
+    /** Plays the fire / shot sound. */
     function playFireSound() {
         fireAudio.currentTime = 0;
         fireAudio.volume = 0.1;
         fireAudio.play();
     }
 
+    /**
+     * Runs one computer shot, re-renders, then either unlocks for the
+     * player or chains another computer move on a hit.
+     */
     function computerMove() {
         AppController.simulateComputerMove();
         playFireSound();
@@ -374,6 +435,7 @@ function UIController() {
         }
     }
 
+    /** End-game modal + victory/loss audio. */
     function showGameOverDialog() {
         const dialog = document.querySelector(".battle-page_end");
         const dialogTitle = document.querySelector(".battle-page_end-title");
@@ -394,6 +456,7 @@ function UIController() {
         dialog.showModal();
     }
 
+    /** Victory sting — pauses in-game music first. */
     function playVictorySound() {
         // pause in-game music
         gameMusic.pause();
@@ -404,6 +467,7 @@ function UIController() {
         victoryAudio.play();
     }
 
+    /** Loss sting — pauses in-game music first. */
     function playLossSound() {
         // pause in-game music
         gameMusic.pause();
@@ -414,6 +478,9 @@ function UIController() {
         lossAudio.play();
     }
 
+    /**
+     * New Battle — reset app state, unlock enemy grid, back to name page.
+     */
     function restartGame() {
         AppController.resetGame();
         document.querySelector(".battle-page_grid[data-board=enemy]").classList.remove("is-locked");
@@ -427,6 +494,7 @@ function UIController() {
         dialog.close();
     }
 
+    /** Wires all page listeners once at startup. */
     function setEventListeners() {
         // name-page form
         const namePageForm = document.querySelector(".name-page_form");
@@ -468,6 +536,7 @@ function UIController() {
         newBattleBtn.addEventListener("click", restartGame);
     }
 
+    /** Boots the UI by attaching event listeners. */
     function initializeApp() {
         setEventListeners();
     }

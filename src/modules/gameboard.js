@@ -1,5 +1,11 @@
 import Ship from "./ship.js";
 
+/**
+ * Factory for one player's board.
+ * Handles ship placement, attacks, fleet status, and light AI targeting state.
+ * @param {number} [size=10] - board size (rows and cols)
+ * @returns {object} board API used by AppController / UI
+ */
 export default function Gameboard(size=10) {
     const GAMEBOARD_SIZE = size;
     const SHIP_INFO = [[5, "carrier"], [4, "battleship"], [3, "cruiser"], [3, "submarine"], [2, "destroyer"]];
@@ -14,6 +20,7 @@ export default function Gameboard(size=10) {
     let openHitCell = null;
     let predictiveCells = null;
 
+    /** Fills the grid with empty cells. */
     function initializeBoard() {
         for (let i = 0; i < grid.length; i++) {
             grid[i] = new Array(grid.length);
@@ -23,18 +30,36 @@ export default function Gameboard(size=10) {
     }
     initializeBoard();
 
+    /** @returns {number} board size */
     function getBoardSize() {
         return GAMEBOARD_SIZE;
     }
 
+    /**
+     * Fleet list used by the UI (length + name per ship).
+     * @returns {Array<[number, string]>}
+     */
     function getShipInfo() {
         return [...SHIP_INFO];
     }
 
+    /**
+     * What's sitting on a cell — a Ship, or undefined.
+     * @param {[number, number]} cell - [row, col]
+     * @returns {Ship|undefined}
+     */
     function getCellItem(cell) {
         return grid[cell[0]][cell[1]];
     }
 
+    /**
+     * Places a ship on the board from a start cell.
+     * Validates the ship index, overlap, and board edges first.
+     * @param {[number, number]} startCell - [row, col]
+     * @param {"H"|"V"} orientation
+     * @param {number} shipIndex - index into SHIP_INFO
+     * @throws {Error} if the ship can't be placed
+     */
     function placeShip(startCell, orientation, shipIndex) {
         // 1. validate ship 
         if (shipsPlaced.size >= SHIP_INFO.length)
@@ -59,6 +84,13 @@ export default function Gameboard(size=10) {
         shipCellMap.set(shipIndex, cells);
     }
 
+    /**
+     * Builds the cell list for a placement, or false if invalid / overlapping.
+     * @param {[number, number]} startCell
+     * @param {"H"|"V"} orientation
+     * @param {number} shipIndex
+     * @returns {Array<[number, number]>|false}
+     */
     function getCellsForPlacement(startCell, orientation, shipIndex) {
         if (isCellValid(startCell) === false)
             return false;
@@ -94,6 +126,10 @@ export default function Gameboard(size=10) {
         return cells;
     }
 
+    /**
+     * @param {[number, number]} cell - [row, col]
+     * @returns {boolean}
+     */
     function isCellValid(cell) {
         const row = cell[0];
         const col = cell[1];
@@ -104,10 +140,16 @@ export default function Gameboard(size=10) {
         return true;
     }
 
+    /** @returns {"H"|"V"} current placement orientation */
     function getCurrentOrientation() {
         return currentOrientation;
     }
 
+    /**
+     * Sets placement orientation for drag-and-drop.
+     * @param {"H"|"V"} orient
+     * @throws {Error} if orient isn't H or V
+     */
     function setOrientation(orient) {
         if (orient !== "H" && orient !== "V")
             throw new Error("Invalid orientation");
@@ -115,24 +157,39 @@ export default function Gameboard(size=10) {
         currentOrientation = orient;
     }
 
+    /**
+     * @param {number} shipIndex
+     * @returns {boolean}
+     */
     function isThisShipPlaced(shipIndex) {
         return shipsPlaced.has(shipIndex);
     }
 
+    /** @returns {boolean} true once the whole fleet is on the board */
     function areShipsPlaced() {
         return !(shipsPlaced.size < SHIP_INFO.length);
     }
 
+    /**
+     * Cells occupied by a placed ship (for sunk styling, etc.).
+     * @param {number} shipIndex
+     * @returns {Array<[number, number]>|undefined}
+     */
     function getShipCells(shipIndex) {
         if (shipCellMap.has(shipIndex))
             return shipCellMap.get(shipIndex);
     }
 
+    /** Clears the grid and placed ships so you can re-place the fleet. */
     function resetShipPlacement() {
         initializeBoard();
         shipsPlaced.clear();
     }
 
+    /**
+     * Ship indexes that are fully sunk.
+     * @returns {number[]}
+     */
     function getSunkShips() {
         const sunkShips = [];
         shipsPlaced.forEach((value, key) => {
@@ -143,6 +200,12 @@ export default function Gameboard(size=10) {
         return sunkShips;
     }
 
+    /**
+     * Human-side attack — hit/miss only, no AI targeting state.
+     * @param {[number, number]} cell - [row, col]
+     * @returns {boolean} true on hit, false on miss
+     * @throws {Error} if the cell is invalid or already attacked
+     */
     function receiveAttack(cell) {
         if (isCellValid(cell) === false)
             throw new Error("Invalid cell!");
@@ -164,11 +227,16 @@ export default function Gameboard(size=10) {
         }       
     }
 
+    /**
+     * Map of attacked cells → "hit" | "miss".
+     * @returns {Map<string, string>}
+     */
     function getAttackedCells() {
         return attackedCells;
     }
 
     // for AI player
+    /** Drops the whole fleet at random valid spots. */
     function placeShipsRandomly() {
         let currentShipIndex = 0;
         while (areShipsPlaced() === false) {
@@ -187,6 +255,14 @@ export default function Gameboard(size=10) {
         }
     }
 
+    /**
+     * Attack used when the computer shoots this board.
+     * Same hit/miss rules as receiveAttack, plus AI bookkeeping
+     * (open hit + predictive queue).
+     * @param {[number, number]} cell - [row, col]
+     * @returns {boolean} true on hit, false on miss
+     * @throws {Error} if the cell is invalid or already attacked
+     */
     function receiveAttackAI(cell) {
         if (isCellValid(cell) === false)
             throw new Error("Invalid cell!");
@@ -227,6 +303,11 @@ export default function Gameboard(size=10) {
         }       
     }
 
+    /**
+     * Builds (or reuses) a queue of cells to try after an open hit.
+     * Rays go out from openHitCell in four directions; empty dirs are skipped.
+     * @returns {Array<Array<[number, number]>>|null} predictive queue, or null if hunting
+     */
     function predictAdjacentCells() {
         // 1. if no openHitCell, return null
         if (openHitCell === null)
@@ -260,6 +341,7 @@ export default function Gameboard(size=10) {
         return predictiveCells;
     }
 
+    /** @returns {boolean} true when every placed ship is sunk */
     function isFleetSunk() {
         const totalSunkShips = getSunkShips().length;
         return !(totalSunkShips < shipsPlaced.size);
