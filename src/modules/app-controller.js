@@ -84,6 +84,7 @@ const AppController = (() => {
         let row;
         let col;
         const predictiveCells = playerBoard.predictAdjacentCells();
+        
         if (predictiveCells === null) {
             row = Math.floor(Math.random()*10);
             col = Math.floor(Math.random()*10);
@@ -143,7 +144,7 @@ const AppController = (() => {
     }
 
     function resetGame() {
-        players = new Player(2);
+        players = new Array(2);
         currentTurn = 0;
         captainName = null;
     }

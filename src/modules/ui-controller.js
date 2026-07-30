@@ -182,7 +182,7 @@ function UIController() {
         // 1. check if the event is fired from a fleet item
         if (event.target instanceof Element === false)
             return;
-        
+
         const fleetItem = event.target.closest(".ship-page_fleet-item");
         if (!fleetItem)
             return;
@@ -322,9 +322,9 @@ function UIController() {
         const enemyWaters = document.querySelector(".battle-page_grid[data-board=enemy]");
         if (AppController.getCurrentTurn() === 0) {
             AppController.attackCell([Number(row), Number(col)]);
-            playFireSound();
-
             enemyWaters.classList.add("is-locked");
+            playFireSound();
+            
             setTimeout(() => {
                 renderBattlePage();
                 // check if game is over
@@ -416,6 +416,7 @@ function UIController() {
 
     function restartGame() {
         AppController.resetGame();
+        document.querySelector(".battle-page_grid[data-board=enemy]").classList.remove("is-locked");
 
         // go back to name-page
         document.querySelector("section.ship-page").hidden = true;

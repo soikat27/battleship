@@ -98,7 +98,7 @@ export default function Gameboard(size=10) {
         const row = cell[0];
         const col = cell[1];
 
-        if ((row < 0 || row >= 10) || (col < 0 || col >= 10))
+        if ((row < 0 || row >= GAMEBOARD_SIZE.length) || (col < 0 || col >= GAMEBOARD_SIZE))
             return false;
 
         return true;
